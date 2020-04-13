@@ -5,12 +5,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="main.controller.Controller">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="main.controller.MainWindowController">
     <top>
         <ToolBar prefHeight="40.0">
-            <Button fx:id="solveButton" onAction="#solveButtonClicked" text="Solve"/>
-            <Button fx:id="stepButton" onAction="#stepButtonClicked" text="Step"/>
-            <Button fx:id="clearButton" onAction="#clearButtonClicked" text="Clear"/>
+            <Button onAction="#solveButtonClicked" text="Solve"/>
+            <Button onAction="#stepButtonClicked" text="Step"/>
+            <Button onAction="#clearButtonClicked" text="Clear"/>
+            <Button onAction="#helpButtonClicked" text="Help"/>
         </ToolBar>
     </top>
     <bottom>
