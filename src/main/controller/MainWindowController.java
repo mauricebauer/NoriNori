@@ -10,17 +10,17 @@ public class MainWindowController {
 
     @FXML
     private void solveButtonClicked() {
-        System.out.println("Solve");
+        stateLabel.setText("Solved successfully");
     }
 
     @FXML
     private void stepButtonClicked() {
-        System.out.println("Step");
+        stateLabel.setText("Stepped");
     }
 
     @FXML
     private void clearButtonClicked() {
-        System.out.println("Clear");
+        stateLabel.setText("Cleared");
     }
 
     @FXML
@@ -31,5 +31,20 @@ public class MainWindowController {
         alert.setHeaderText("NoriNori Solver V0.1");
         alert.setContentText("Use the following keys...\nHere is the license...");
         alert.showAndWait();
+    }
+
+    @FXML
+    private void zoomInButtonClicked() {
+        stateLabel.setText("Zoomed in");
+    }
+
+    @FXML
+    private void zoomOutButtonClicked() {
+        stateLabel.setText("Zoomed out");
+    }
+
+    @FXML
+    private void openFileButtonClicked() {
+        stateLabel.setText("File loaded");
     }
 }

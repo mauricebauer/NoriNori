@@ -5,15 +5,25 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="main.controller.MainWindowController">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="main.controller.MainWindowController">
     <top>
         <ToolBar prefHeight="40.0">
-            <Button onAction="#solveButtonClicked" text="Solve"/>
-            <Button onAction="#stepButtonClicked" text="Step"/>
-            <Button onAction="#clearButtonClicked" text="Clear"/>
-            <Button onAction="#helpButtonClicked" text="Help"/>
+            <Button onAction="#openFileButtonClicked" text="📂 Open"/>
+            <Separator/>
+            <Button onAction="#solveButtonClicked" text="▶ Solve"/>
+            <Button onAction="#stepButtonClicked" text="⏯ Step"/>
+            <Button onAction="#clearButtonClicked" text="🗑 Clear"/>
+            <Separator/>
+            <Button onAction="#zoomInButtonClicked" text="🔍 +"/>
+            <Button onAction="#zoomOutButtonClicked" text="🔍 -"/>
+            <Separator/>
+            <Button onAction="#helpButtonClicked" text="🛈 Help"/>
         </ToolBar>
     </top>
+    <center>
+        <Label text="Content"/>
+    </center>
     <bottom>
         <HBox>
             <padding>

@@ -17,7 +17,8 @@ public class Main extends Application {
         // TODO: Set a cool icon for MainWindow and HelpWindow
         Parent root = FXMLLoader.load(getClass().getResource("view/MainWindow.fxml"));
         primaryStage.setTitle("NoriNori Solver");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
+        primaryStage.setScene(new Scene(root, 500, 500));
         primaryStage.show();
     }
 }
