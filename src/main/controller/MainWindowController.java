@@ -3,6 +3,8 @@ package main.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 public class MainWindowController {
     @FXML
@@ -46,5 +48,29 @@ public class MainWindowController {
     @FXML
     private void openFileButtonClicked() {
         stateLabel.setText("File loaded");
+    }
+
+    @FXML
+    private void keyPressed(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()) {
+            case F1:
+                helpButtonClicked();
+                break;
+            case F2:
+                openFileButtonClicked();
+                break;
+            case F5:
+                stepButtonClicked();
+                break;
+            case F6:
+                solveButtonClicked();
+                break;
+            case F7:
+                clearButtonClicked();
+                break;
+            case F8:
+                ((Stage) stateLabel.getScene().getWindow()).close();
+                break;
+        }
     }
 }

@@ -5,20 +5,48 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<BorderPane xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns:fx="http://javafx.com/fxml" onKeyPressed="#keyPressed"
             fx:controller="main.controller.MainWindowController">
     <top>
         <ToolBar prefHeight="40.0">
-            <Button onAction="#openFileButtonClicked" text="📂 Open"/>
+            <Button onAction="#openFileButtonClicked" text="📂 Open">
+                <tooltip>
+                    <Tooltip text="Open a json-file containing a board to solve [F2]"/>
+                </tooltip>
+            </Button>
             <Separator/>
-            <Button onAction="#solveButtonClicked" text="▶ Solve"/>
-            <Button onAction="#stepButtonClicked" text="⏯ Step"/>
-            <Button onAction="#clearButtonClicked" text="🗑 Clear"/>
+            <Button onAction="#stepButtonClicked" text="⏯ Step">
+                <tooltip>
+                    <Tooltip text="Try to step using backtracking [F5]"/>
+                </tooltip>
+            </Button>
+            <Button onAction="#solveButtonClicked" text="▶ Solve">
+                <tooltip>
+                    <Tooltip text="Try to solve the board using backtracking [F6]"/>
+                </tooltip>
+            </Button>
+            <Button onAction="#clearButtonClicked" text="🗑 Clear">
+                <tooltip>
+                    <Tooltip text="Clear the current state of the board [F7]"/>
+                </tooltip>
+            </Button>
             <Separator/>
-            <Button onAction="#zoomInButtonClicked" text="🔍 +"/>
-            <Button onAction="#zoomOutButtonClicked" text="🔍 -"/>
+            <Button onAction="#zoomInButtonClicked" text="🔍 +">
+                <tooltip>
+                    <Tooltip text="Make the board bigger"/>
+                </tooltip>
+            </Button>
+            <Button onAction="#zoomOutButtonClicked" text="🔍 -">
+                <tooltip>
+                    <Tooltip text="Make the board smaller"/>
+                </tooltip>
+            </Button>
             <Separator/>
-            <Button onAction="#helpButtonClicked" text="🛈 Help"/>
+            <Button onAction="#helpButtonClicked" text="🛈 Help">
+                <tooltip>
+                    <Tooltip text="Show the help [F1]"/>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
     <center>
