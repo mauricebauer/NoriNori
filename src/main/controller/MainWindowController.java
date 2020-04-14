@@ -33,7 +33,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void solveButtonClicked() {
-        if (solver.solve(noriGame.getNoriCellList(), false)) {
+        if (solver.solve(noriGame, false)) {
             stateLabel.setText("Solved successfully");
         } else {
             stateLabel.setText("Solving failed");
@@ -48,7 +48,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void stepButtonClicked() {
-        if (solver.solve(noriGame.getNoriCellList(), true)) {
+        if (solver.solve(noriGame, true)) {
             stateLabel.setText("Stepped successfully");
             solver.reset();
         } else {
