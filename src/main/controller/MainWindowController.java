@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -21,12 +23,13 @@ import java.util.ResourceBundle;
 public class MainWindowController implements Initializable {
     private final ISolver solver = new BacktrackingSolver();
     private NoriGame noriGame = new NoriGame();
+    private GridController gridController;
+
     @FXML
     private Label stateLabel;
 
     @FXML
     private GridPane grid;
-    private GridController gridController;
 
     @FXML
     private void solveButtonClicked() {
@@ -151,5 +154,23 @@ public class MainWindowController implements Initializable {
             alert.showAndWait();
         }
         stateLabel.getScene().getWindow().sizeToScene();
+    }
+
+    @FXML
+    private void onDragOver(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.COPY);
+        }
+        dragEvent.consume();
+    }
+
+    @FXML
+    private void onDragDropped(DragEvent dragEvent) {
+        if (dragEvent.getDragboard().hasFiles()) {
+            String path = dragEvent.getDragboard().getFiles().get(0).getAbsolutePath();
+            dragEvent.setDropCompleted(true);
+            readGameFromFile(path);
+        }
+        dragEvent.consume();
     }
 }
