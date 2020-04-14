@@ -7,9 +7,9 @@ import main.model.NoriCell;
 import main.model.NoriGame;
 
 public class GridController {
-    private final double SIZE_OF_CELL = 40;
-    private final double BORDER_THICKNESS_NORMAL = 0.5;
-    private final double BORDER_THICKNESS_THICK = 2;
+    public static final double SIZE_OF_CELL = 40;
+    public static final double BORDER_THICKNESS_NORMAL = 0.5;
+    public static final double BORDER_THICKNESS_THICK = 2;
 
     private final GridPane grid;
     private double currentSizeOfCell;
