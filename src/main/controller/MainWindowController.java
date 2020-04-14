@@ -19,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 public class MainWindowController implements Initializable {
     private final ISolver solver = new BacktrackingSolver();
@@ -33,8 +34,12 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void solveButtonClicked() {
-        if (solver.solve(noriGame, false)) {
-            stateLabel.setText("Solved successfully");
+        long timeStarted = System.nanoTime();
+        boolean result = solver.solve(noriGame, false);
+        long timeStopped = System.nanoTime();
+        if (result) {
+            long timeInMs = TimeUnit.NANOSECONDS.toMillis(timeStopped - timeStarted);
+            stateLabel.setText("Solved successfully (" + timeInMs + " ms)");
         } else {
             stateLabel.setText("Solving failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
