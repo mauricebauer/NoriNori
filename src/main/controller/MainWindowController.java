@@ -1,14 +1,25 @@
 package main.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import main.model.NoriCell;
+import main.model.NoriGame;
 
-public class MainWindowController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainWindowController implements Initializable {
     @FXML
     private Label stateLabel;
+
+    @FXML
+    private GridPane grid;
+    private GridController gridController;
 
     @FXML
     private void solveButtonClicked() {
@@ -37,11 +48,17 @@ public class MainWindowController {
 
     @FXML
     private void zoomInButtonClicked() {
+        if (gridController != null)
+            gridController.resizeBoard(true);
+        stateLabel.getScene().getWindow().sizeToScene();
         stateLabel.setText("Zoomed in");
     }
 
     @FXML
     private void zoomOutButtonClicked() {
+        if (gridController != null)
+            gridController.resizeBoard(false);
+        stateLabel.getScene().getWindow().sizeToScene();
         stateLabel.setText("Zoomed out");
     }
 
@@ -72,5 +89,20 @@ public class MainWindowController {
                 ((Stage) stateLabel.getScene().getWindow()).close();
                 break;
         }
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        gridController = new GridController(grid);
+
+        // Add default game (for a starting point)
+        NoriGame noriGame = new NoriGame();
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                noriGame.getNoriCellList().add(new NoriCell(i, j, 0));
+            }
+        }
+
+        gridController.createBoard(noriGame);
     }
 }

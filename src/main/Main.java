@@ -18,7 +18,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("view/MainWindow.fxml"));
         primaryStage.setTitle("NoriNori Solver");
         primaryStage.setResizable(false);
-        primaryStage.setScene(new Scene(root, 500, 500));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 }

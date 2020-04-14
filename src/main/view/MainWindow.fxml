@@ -2,14 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" onKeyPressed="#keyPressed"
-            fx:controller="main.controller.MainWindowController">
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" onKeyPressed="#keyPressed"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="main.controller.MainWindowController">
     <top>
         <ToolBar prefHeight="40.0">
-            <Button onAction="#openFileButtonClicked" text="📂 Open">
+            <Button onAction="#openFileButtonClicked" text="📂">
                 <tooltip>
                     <Tooltip text="Open a json-file containing a board to solve [F2]"/>
                 </tooltip>
@@ -42,16 +40,13 @@
                 </tooltip>
             </Button>
             <Separator/>
-            <Button onAction="#helpButtonClicked" text="🛈 Help">
+            <Button onAction="#helpButtonClicked" text="🛈">
                 <tooltip>
                     <Tooltip text="Show the help [F1]"/>
                 </tooltip>
             </Button>
         </ToolBar>
     </top>
-    <center>
-        <Label text="Content"/>
-    </center>
     <bottom>
         <HBox>
             <padding>
@@ -62,4 +57,12 @@
             <Label text="Developed by 5962594"/>
         </HBox>
     </bottom>
+    <center>
+        <StackPane>
+            <GridPane fx:id="grid" alignment="CENTER"/>
+            <padding>
+                <Insets left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </StackPane>
+    </center>
 </BorderPane>
