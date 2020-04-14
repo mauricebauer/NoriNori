@@ -1,17 +1,31 @@
 package main.model;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoriGame {
     private final List<NoriCell> noriCellList = new ArrayList<>();
 
-    public NoriGame(boolean createWithDefaultCells) {
-        if (createWithDefaultCells) {
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 6; j++) {
-                    noriCellList.add(new NoriCell(i, j, 0));
-                }
+    public NoriGame() {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                noriCellList.add(new NoriCell(i, j, 0));
+            }
+        }
+    }
+
+    public NoriGame(String jsonString) {
+        Type jsonType = new TypeToken<ArrayList<ArrayList<Integer>>>() {
+        }.getType();
+        ArrayList<ArrayList<Integer>> input = new Gson().fromJson(jsonString, jsonType);
+        noriCellList.clear();
+        for (int row = 0; row < input.size(); row++) {
+            for (int col = 0; col < input.get(row).size(); col++) {
+                noriCellList.add(new NoriCell(col, row, input.get(row).get(col)));
             }
         }
     }

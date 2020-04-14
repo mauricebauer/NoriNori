@@ -58,12 +58,15 @@ public class GridController {
         }
     }
 
-    // TODO: This function should receive the board from the model with all the cells
     public void createBoard(NoriGame noriGame) {
         rows = noriGame.getMaxRow() + 1;  // Needed because maxRow == 0 needs 1 row and maxRow == 1 needs 2 rows
         columns = noriGame.getMaxColumn() + 1;  // Same logic as line above
 
+        // Reset GridPanel
         grid.setSnapToPixel(false);  // Needed for clearer and sharper edges in GUI
+        grid.getChildren().clear();
+        grid.getRowConstraints().clear();
+        grid.getColumnConstraints().clear();
 
         // Create rows and columns with fixed size
         for (int i = 0; i < rows; i++) {

@@ -4,7 +4,7 @@ public class NoriCell {
     private final int col;
     private final int row;
     private final int regionId;
-    private NoriCellState state = NoriCellState.UNMARKED;
+    private NoriCellState state;
 
     public NoriCell(int col, int row, int regionId) {
         this.col = col;
@@ -25,6 +25,9 @@ public class NoriCell {
     }
 
     public NoriCellState getState() {
+        if (state == null)
+            return NoriCellState.UNMARKED;
+
         return state;
     }
 

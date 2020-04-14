@@ -6,18 +6,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.model.BacktrackingSolver;
 import main.model.ISolver;
 import main.model.NoriGame;
 
+import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
-    private final NoriGame noriGame = new NoriGame(true);
     private final ISolver solver = new BacktrackingSolver();
-
+    private NoriGame noriGame = new NoriGame();
     @FXML
     private Label stateLabel;
 
@@ -92,8 +95,13 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void openFileButtonClicked() {
-        // TODO: Replace noriGame with correct loaded Game
-        stateLabel.setText("File loaded");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open NoriNori board with json-Format");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File file = fileChooser.showOpenDialog(stateLabel.getScene().getWindow());
+        if (file != null) {
+            readGameFromFile(file.getAbsolutePath());
+        }
     }
 
     @FXML
@@ -124,5 +132,24 @@ public class MainWindowController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gridController = new GridController(grid);
         gridController.createBoard(noriGame);
+    }
+
+    private void readGameFromFile(String filePath) {
+        try {
+            String content = Files.readString(Paths.get(filePath));
+            noriGame = new NoriGame(content);
+            gridController.createBoard(noriGame);
+            stateLabel.setText("File loaded");
+        } catch (Exception e) {
+            noriGame = new NoriGame();
+            gridController.createBoard(noriGame);
+            stateLabel.setText("File not loaded");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Failed to read file");
+            alert.setHeaderText("Failed to read file!");
+            alert.setContentText("The file selected cannot be read correctly!");
+            alert.showAndWait();
+        }
+        stateLabel.getScene().getWindow().sizeToScene();
     }
 }
