@@ -6,6 +6,22 @@ import java.util.List;
 public class NoriGame {
     private final List<NoriCell> noriCellList = new ArrayList<>();
 
+    public NoriGame(boolean createWithDefaultCells) {
+        if (createWithDefaultCells) {
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 6; j++) {
+                    noriCellList.add(new NoriCell(i, j, 0));
+                }
+            }
+        }
+    }
+
+    public void resetCells() {
+        for (NoriCell cell : noriCellList) {
+            cell.setState(NoriCellState.UNMARKED);
+        }
+    }
+
     public List<NoriCell> getNoriCellList() {
         return noriCellList;
     }

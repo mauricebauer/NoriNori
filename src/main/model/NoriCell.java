@@ -1,10 +1,10 @@
 package main.model;
 
 public class NoriCell {
-    private NoriCellState state = NoriCellState.UNMARKED;
     private final int col;
     private final int row;
     private final int regionId;
+    private NoriCellState state = NoriCellState.UNMARKED;
 
     public NoriCell(int col, int row, int regionId) {
         this.col = col;

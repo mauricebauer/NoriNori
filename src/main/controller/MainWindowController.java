@@ -7,13 +7,17 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import main.model.NoriCell;
+import main.model.BacktrackingSolver;
+import main.model.ISolver;
 import main.model.NoriGame;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
+    private final NoriGame noriGame = new NoriGame(true);
+    private final ISolver solver = new BacktrackingSolver();
+
     @FXML
     private Label stateLabel;
 
@@ -23,17 +27,41 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void solveButtonClicked() {
-        stateLabel.setText("Solved successfully");
+        if (solver.solve(noriGame.getNoriCellList(), false)) {
+            stateLabel.setText("Solved successfully");
+        } else {
+            stateLabel.setText("Solving failed");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Solving failed");
+            alert.setHeaderText("Solving failed!");
+            alert.setContentText("Could not solve the current NoriNori puzzle!");
+            alert.showAndWait();
+        }
+        gridController.colorCells(noriGame);
     }
 
     @FXML
     private void stepButtonClicked() {
-        stateLabel.setText("Stepped");
+        if (solver.solve(noriGame.getNoriCellList(), true)) {
+            stateLabel.setText("Stepped successfully");
+            solver.reset();
+        } else {
+            stateLabel.setText("Stepping failed");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Solving failed");
+            alert.setHeaderText("Solving failed!");
+            alert.setContentText("Could not solve the current NoriNori puzzle!");
+            alert.showAndWait();
+        }
+        gridController.colorCells(noriGame);
     }
 
     @FXML
     private void clearButtonClicked() {
+        noriGame.resetCells();
+        gridController.colorCells(noriGame);
         stateLabel.setText("Cleared");
+        solver.reset();
     }
 
     @FXML
@@ -64,6 +92,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void openFileButtonClicked() {
+        // TODO: Replace noriGame with correct loaded Game
         stateLabel.setText("File loaded");
     }
 
@@ -94,15 +123,6 @@ public class MainWindowController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gridController = new GridController(grid);
-
-        // Add default game (for a starting point)
-        NoriGame noriGame = new NoriGame();
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                noriGame.getNoriCellList().add(new NoriCell(i, j, 0));
-            }
-        }
-
         gridController.createBoard(noriGame);
     }
 }
