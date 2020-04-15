@@ -10,47 +10,60 @@ public class BacktrackingSolver implements ISolver {
         add(NoriCellState.BLACK);
         add(NoriCellState.WHITE);
     }};
+    // The cells added to the stack are clones
+    // (to store the move - never replace the original cell with the clone -> only the values)
+    private final Deque<NoriCell> stack = new ArrayDeque<>();
 
     @Override
     public boolean solve(NoriGame noriGame, boolean doOnlyOneStep) {
-        // printBoard(noriGame);
-        NoriCell unmarkedCell = noriGame.findUnmarkedCell();
-        if (unmarkedCell == null)
-            return true;  // Finished solving if no unmarked cell left
-
-        for (NoriCellState state : possibleStates) {
-            if (noriGame.checkIfPossible(unmarkedCell, state)) {
-                unmarkedCell.setState(state);
-                if (solve(noriGame, doOnlyOneStep)) return true;
-                else unmarkedCell.setState(NoriCellState.UNMARKED);
+        if (doOnlyOneStep && noriGame.findUnmarkedCell() != null) {
+            return solveStep(noriGame);
+        } else if (!doOnlyOneStep) {
+            boolean result = true;
+            while (noriGame.findUnmarkedCell() != null) {
+                result = solveStep(noriGame);
             }
+            return result;
         }
-
-        return false;  // No solution found
+        return true;
     }
 
-    private void printBoard(NoriGame noriGame) {
-        System.out.println();
-        System.out.println();
-        for (int row = 0; row <= noriGame.getMaxRow(); row++) {
-            for (int col = 0; col <= noriGame.getMaxCol(); col++) {
-                switch (noriGame.getCell(col, row).getState()) {
-                    case UNMARKED:
-                        System.out.print("- ");
-                        break;
-                    case WHITE:
-                        System.out.print("0 ");
-                        break;
-                    case BLACK:
-                        System.out.print("X ");
-                        break;
-                }
-            }
-            System.out.println();
+    private boolean solveStep(NoriGame noriGame) {
+        NoriCell cellToSolve = stack.isEmpty() ? noriGame.getCell(0, 0) : getNextCell(noriGame, stack.peek());
+
+        if (cellToSolve.getState() == NoriCellState.UNMARKED &&
+                noriGame.checkIfPossible(cellToSolve, NoriCellState.BLACK)) {
+            cellToSolve.setState(NoriCellState.BLACK);
+            stack.push(new NoriCell(cellToSolve));  // Store move as clone on stack
+            return true;
         }
+
+        if (cellToSolve.getState() == NoriCellState.UNMARKED || cellToSolve.getState() == NoriCellState.BLACK) {
+            cellToSolve.setState(NoriCellState.UNMARKED);
+            if (noriGame.checkIfPossible(cellToSolve, NoriCellState.WHITE)) {
+                cellToSolve.setState(NoriCellState.WHITE);
+                stack.push(new NoriCell(cellToSolve));  // Store move as clone on stack
+                return true;
+            }
+        }
+
+        // Every other case where there is no more possibility -> backtrack
+        cellToSolve.setState(NoriCellState.UNMARKED);
+        if (!stack.isEmpty()) stack.pop();
+        //if(stack.isEmpty())
+        //    System.out.println("Stack empty: Cell-" + cellToSolve.getCol() + "-" + cellToSolve.getRow());
+        return false;
     }
 
     @Override
     public void reset() {
+        stack.clear();
+    }
+
+    private NoriCell getNextCell(NoriGame noriGame, NoriCell cell) {
+        if (cell.getCol() < noriGame.getMaxCol())
+            return noriGame.getCell(cell.getCol() + 1, cell.getRow());
+
+        return noriGame.getCell(0, cell.getRow() + 1);
     }
 }

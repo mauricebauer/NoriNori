@@ -12,6 +12,14 @@ public class NoriCell {
         this.region = region;
     }
 
+    // Copy constructor
+    public NoriCell(NoriCell originalCell) {
+        this.col = originalCell.getCol();
+        this.row = originalCell.getRow();
+        this.region = originalCell.getRegion();
+        this.state = originalCell.getState();
+    }
+
     public int getCol() {
         return col;
     }

@@ -54,15 +54,9 @@ public class MainWindowController implements Initializable {
     @FXML
     private void stepButtonClicked() {
         if (solver.solve(noriGame, true)) {
-            stateLabel.setText("Stepped successfully");
-            solver.reset();
+            stateLabel.setText(noriGame.findUnmarkedCell() != null ? "Stepped" : "Solved successfully");
         } else {
-            stateLabel.setText("Stepping failed");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Solving failed");
-            alert.setHeaderText("Solving failed!");
-            alert.setContentText("Could not solve the current NoriNori puzzle!");
-            alert.showAndWait();
+            stateLabel.setText("Stepped backwards");
         }
         gridController.colorCells(noriGame);
     }
@@ -145,6 +139,7 @@ public class MainWindowController implements Initializable {
             Path path = Path.of(filePath);
             String content = Files.readString(path);
             noriGame = new NoriGame(content);
+            solver.reset();
             gridController.createBoard(noriGame);
             stateLabel.setText("File loaded");
             ((Stage) stateLabel.getScene().getWindow()).setTitle(path.getFileName() + " - NoriNori Solver");
