@@ -17,7 +17,7 @@ import main.model.NoriGame;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
@@ -142,10 +142,12 @@ public class MainWindowController implements Initializable {
 
     private void readGameFromFile(String filePath) {
         try {
-            String content = Files.readString(Paths.get(filePath));
+            Path path = Path.of(filePath);
+            String content = Files.readString(path);
             noriGame = new NoriGame(content);
             gridController.createBoard(noriGame);
             stateLabel.setText("File loaded");
+            ((Stage) stateLabel.getScene().getWindow()).setTitle(path.getFileName() + " - NoriNori Solver");
         } catch (Exception e) {
             noriGame = new NoriGame();
             gridController.createBoard(noriGame);
