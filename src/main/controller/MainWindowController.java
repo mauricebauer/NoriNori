@@ -2,7 +2,7 @@ package main.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
@@ -11,7 +11,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.model.BacktrackingSolver;
-import main.model.ISolver;
 import main.model.NoriGame;
 
 import java.io.File;
@@ -19,46 +18,42 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 public class MainWindowController implements Initializable {
-    private final ISolver solver = new BacktrackingSolver();
+    private final BacktrackingSolver solver = new BacktrackingSolver();
+    public GridController gridController;
+    public AlertController alertController;
     private NoriGame noriGame = new NoriGame();
-    private GridController gridController;
-
     @FXML
     private Label stateLabel;
-
+    @FXML
+    private Button stepButton, solveButton, clearButton, openFileButton;
     @FXML
     private GridPane grid;
 
+    public void setStateLabelText(String text) {
+        stateLabel.setText(text);
+    }
+
+    public void setDisableButtons(boolean state) {
+        stepButton.setDisable(state);
+        solveButton.setDisable(state);
+        clearButton.setDisable(state);
+        openFileButton.setDisable(state);
+    }
+
     @FXML
     private void solveButtonClicked() {
-        long timeStarted = System.nanoTime();
-        boolean result = solver.solve(noriGame, false);
-        long timeStopped = System.nanoTime();
-        if (result) {
-            long timeInMs = TimeUnit.NANOSECONDS.toMillis(timeStopped - timeStarted);
-            stateLabel.setText("Solved successfully (" + timeInMs + " ms)");
-        } else {
-            stateLabel.setText("Solving failed");
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Solving failed");
-            alert.setHeaderText("Solving failed!");
-            alert.setContentText("Could not solve the current NoriNori puzzle!");
-            alert.showAndWait();
-        }
-        gridController.colorCells(noriGame);
+        setDisableButtons(true);
+        Thread solverThread = new Thread(() -> solver.solve(noriGame, false, this), "Solver");
+        solverThread.setDaemon(true);
+        solverThread.start();
     }
 
     @FXML
     private void stepButtonClicked() {
-        if (solver.solve(noriGame, true)) {
-            stateLabel.setText(noriGame.findUnmarkedCell() != null ? "Stepped" : "Solved successfully");
-        } else {
-            stateLabel.setText("Stepped backwards");
-        }
-        gridController.colorCells(noriGame);
+        setDisableButtons(true);
+        new Thread(() -> solver.solve(noriGame, true, this), "Solver").start();
     }
 
     @FXML
@@ -71,12 +66,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void helpButtonClicked() {
-        // TODO: Add the correct content (Keys and License for Icons)
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Help - NoriNori Solver");
-        alert.setHeaderText("NoriNori Solver V0.1");
-        alert.setContentText("Use the following keys...\nHere is the license...");
-        alert.showAndWait();
+        alertController.showHelpAlert();
     }
 
     @FXML
@@ -130,6 +120,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        alertController = new AlertController();
         gridController = new GridController(grid);
         gridController.createBoard(noriGame);
     }
@@ -147,11 +138,7 @@ public class MainWindowController implements Initializable {
             noriGame = new NoriGame();
             gridController.createBoard(noriGame);
             stateLabel.setText("File not loaded");
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Failed to read file");
-            alert.setHeaderText("Failed to read file!");
-            alert.setContentText("The file selected cannot be read correctly!");
-            alert.showAndWait();
+            alertController.showFileError();
         }
         stateLabel.getScene().getWindow().sizeToScene();
     }

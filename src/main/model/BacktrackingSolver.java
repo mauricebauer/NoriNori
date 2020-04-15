@@ -1,34 +1,50 @@
 package main.model;
 
-import java.util.*;
+import javafx.application.Platform;
+import main.controller.MainWindowController;
 
-public class BacktrackingSolver implements ISolver {
-    private final List<NoriCellState> possibleStates = new ArrayList<>() {{
-        add(NoriCellState.BLACK);
-        add(NoriCellState.WHITE);
-    }};
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.NoSuchElementException;
+
+public class BacktrackingSolver {
+    // uiUpdateFrequency is how many loops should be iterated until next ui refresh
+    public static final int uiUpdateFrequency = 10000;
     // The cells added to the stack are clones of the original ones
     // (to store the move - never replace the original cell with the clone -> only the values)
     private final Deque<NoriCell> stack = new ArrayDeque<>();
 
-    @Override
-    public boolean solve(NoriGame noriGame, boolean doOnlyOneStep) {
+    public void solve(NoriGame noriGame, boolean doOnlyOneStep, MainWindowController controller) {
+        Runnable updateUiTask = () -> controller.gridController.colorCells(noriGame);
+        Platform.runLater(() -> controller.setStateLabelText(doOnlyOneStep ? "Stepping..." : "Solving..."));
         try {
             if (doOnlyOneStep && noriGame.findUnmarkedCell() != null) {
-                return solveStep(noriGame);
-            } else if (!doOnlyOneStep) {
+                boolean result = solveStep(noriGame);
+                Platform.runLater(() -> controller.setStateLabelText(result ? "Stepped" : "Stepped back"));
+            } else if (!doOnlyOneStep && noriGame.findUnmarkedCell() != null) {
+                int uiFrequencyCounter = 0;
                 boolean result = true;
                 while (noriGame.findUnmarkedCell() != null) {
                     result = solveStep(noriGame);
+                    if (++uiFrequencyCounter > uiUpdateFrequency) {
+                        Platform.runLater(updateUiTask);
+                        uiFrequencyCounter = 0;
+                    }
                 }
-                return result;
+                boolean finalResult = result;
+                Platform.runLater(() -> controller.setStateLabelText(finalResult ? "Solved successful" : "Solving failed"));
+                if (!finalResult) Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
+            } else {
+                Platform.runLater(() -> controller.setStateLabelText("Solved successful"));
             }
-            return true;
         } catch (NoSuchElementException e) {
             // Exception will occur if stack is empty and tried to pop()
             // This occurs if the gameboard is not valid / solvable
-            return false;
+            Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
+            Platform.runLater(() -> controller.setStateLabelText("Solving failed"));
         }
+        Platform.runLater(updateUiTask);
+        Platform.runLater(() -> controller.setDisableButtons(false));
     }
 
     private boolean solveStep(NoriGame noriGame) {
@@ -56,7 +72,6 @@ public class BacktrackingSolver implements ISolver {
         return false;
     }
 
-    @Override
     public void reset() {
         stack.clear();
     }

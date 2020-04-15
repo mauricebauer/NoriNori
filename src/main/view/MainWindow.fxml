@@ -8,23 +8,23 @@
             onDragOver="#onDragOver" onDragDropped="#onDragDropped">
     <top>
         <ToolBar prefHeight="40.0">
-            <Button onAction="#openFileButtonClicked" text="📂">
+            <Button fx:id="openFileButton" onAction="#openFileButtonClicked" text="📂">
                 <tooltip>
                     <Tooltip text="Open a json-file containing a board to solve [F2]"/>
                 </tooltip>
             </Button>
             <Separator/>
-            <Button onAction="#stepButtonClicked" text="⏯ Step">
+            <Button fx:id="stepButton" onAction="#stepButtonClicked" text="⏯ Step">
                 <tooltip>
                     <Tooltip text="Try to step using backtracking [F5]"/>
                 </tooltip>
             </Button>
-            <Button onAction="#solveButtonClicked" text="▶ Solve">
+            <Button fx:id="solveButton" onAction="#solveButtonClicked" text="▶ Solve">
                 <tooltip>
                     <Tooltip text="Try to solve the board using backtracking [F6]"/>
                 </tooltip>
             </Button>
-            <Button onAction="#clearButtonClicked" text="🗑 Clear">
+            <Button fx:id="clearButton" onAction="#clearButtonClicked" text="🗑 Clear">
                 <tooltip>
                     <Tooltip text="Clear the current state of the board [F7]"/>
                 </tooltip>
