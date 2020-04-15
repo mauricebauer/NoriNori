@@ -87,16 +87,14 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void zoomInButtonClicked() {
-        if (gridController != null)
-            gridController.resizeBoard(true);
+        gridController.resizeBoard(true);
         stateLabel.getScene().getWindow().sizeToScene();
         stateLabel.setText("Zoomed in");
     }
 
     @FXML
     private void zoomOutButtonClicked() {
-        if (gridController != null)
-            gridController.resizeBoard(false);
+        gridController.resizeBoard(false);
         stateLabel.getScene().getWindow().sizeToScene();
         stateLabel.setText("Zoomed out");
     }

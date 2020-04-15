@@ -5,189 +5,203 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class NoriGame {
-    private List<NoriCell> noriCellList = new ArrayList<>();
-    private int maxRow = -1, maxCol = -1;
+    // Indexes are always ((maxCol+1) * row) + col
+    private final List<NoriCell> noriCells = new ArrayList<>();
+    private final List<NoriRegion> noriRegions = new ArrayList<>();
+    private final int maxRow, maxCol;
 
     public NoriGame() {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                noriCellList.add(new NoriCell(i, j, 0));
+        int rows = 6;
+        int columns = 6;
+        maxRow = rows - 1;
+        maxCol = columns - 1;
+        noriRegions.add(new NoriRegion());
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                NoriCell cell = new NoriCell(col, row, 0);
+                getNoriCells().add(cell);  // Be careful with the position of the object in the list!
+                getNoriRegions().get(0).addCell(cell);
             }
         }
     }
 
     public NoriGame(String jsonString) {
+        // Parse JSON
         Type jsonType = new TypeToken<ArrayList<ArrayList<Integer>>>() {
         }.getType();
         ArrayList<ArrayList<Integer>> input = new Gson().fromJson(jsonString, jsonType);
-        noriCellList.clear();
-        for (int row = 0; row < input.size(); row++) {
-            for (int col = 0; col < input.get(row).size(); col++) {
-                noriCellList.add(new NoriCell(col, row, input.get(row).get(col)));
+
+        // Calculate sizes
+        int rows = input.size();
+        int columns = input.get(0).size();
+        maxRow = rows - 1;
+        maxCol = columns - 1;
+
+        // Initialize regions
+        HashSet<Integer> regionSet = new HashSet<>();
+        for (ArrayList<Integer> row : input)
+            regionSet.addAll(row);
+        for (int i = 0; i <= Collections.max(regionSet); i++)
+            getNoriRegions().add(new NoriRegion());
+
+        // Initialize cells
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                NoriCell cell = new NoriCell(col, row, input.get(row).get(col));
+                getNoriCells().add(cell);  // Be careful with the position of the object in the list!
+                getNoriRegions().get(cell.getRegion()).addCell(cell);
             }
         }
     }
 
+    // Mark all Cells as UNMARKED
     public void resetCells() {
-        for (NoriCell cell : noriCellList) {
+        for (NoriCell cell : getNoriCells()) {
             cell.setState(NoriCellState.UNMARKED);
         }
     }
 
-    public List<NoriCell> getNoriCellList() {
-        return noriCellList;
-    }
+    public boolean checkIfPossible(NoriCell cell, NoriCellState state) {
+        // Check if state to check is valid
+        if (state == NoriCellState.UNMARKED || cell.getState() != NoriCellState.UNMARKED)
+            System.out.println("WARNING! Tried to check unmarked cell or a place which is already marked!");
 
-    public void setNoriCellList(List<NoriCell> noriCellList) {
-        this.noriCellList = noriCellList;
-    }
+        // Check region
+        NoriRegion regionOfCell = getNoriRegions().get(cell.getRegion());
+        if (!regionOfCell.checkIfPlacementInRegionIsValid(state))
+            return false;
 
-    public NoriCell getCell(int col, int row) {
-        return noriCellList.stream().filter(c -> c.getCol() == col && c.getRow() == row).findFirst().get();
-    }
+        // Check black placement
+        if (state == NoriCellState.BLACK) {
+            if (isDominoAroundCell(cell))
+                return false;
 
-    public int getMaxRow() {
-        if (maxRow == -1) {
-            maxRow = noriCellList.stream().map(NoriCell::getRow).max(Integer::compareTo).get();
+            if (isMoreThanOneLonelyBlackCellAround(cell))
+                return false;
         }
-        return maxRow;
+
+        // Check white placement
+        return state != NoriCellState.WHITE || !willThisPlacementEncapsulateALonelyBlackCell(cell);
     }
 
-    public int getMaxColumn() {
-        if (maxCol == -1) {
-            maxCol = noriCellList.stream().map(NoriCell::getCol).max(Integer::compareTo).get();
-        }
-        return maxCol;
+    // Returns true if there is a domino around the cell and thus the placement not valid
+    private boolean isDominoAroundCell(NoriCell cell) {
+        // Check top, then right, then bottom, then left
+        return (cell.getRow() > 0 && isCellPartOfDomino(getCell(cell.getCol(), cell.getRow() - 1))) ||
+                (cell.getCol() < getMaxCol() && isCellPartOfDomino(getCell(cell.getCol() + 1, cell.getRow()))) ||
+                (cell.getRow() < getMaxRow() && isCellPartOfDomino(getCell(cell.getCol(), cell.getRow() + 1))) ||
+                (cell.getCol() > 0 && isCellPartOfDomino(getCell(cell.getCol() - 1, cell.getRow())));
+    }
+
+    // Return true if the passed cell is part of a domino
+    private boolean isCellPartOfDomino(NoriCell cell) {
+        if (cell.getState() != NoriCellState.BLACK) return false;
+
+        // Check top, then right, then bottom, then left
+        return (cell.getRow() > 0 && getCell(cell.getCol(), cell.getRow() - 1).getState() == NoriCellState.BLACK) ||
+                (cell.getCol() < getMaxCol() && getCell(cell.getCol() + 1, cell.getRow()).getState() == NoriCellState.BLACK) ||
+                (cell.getRow() < getMaxRow() && getCell(cell.getCol(), cell.getRow() + 1).getState() == NoriCellState.BLACK) ||
+                (cell.getCol() > 0 && getCell(cell.getCol() - 1, cell.getRow()).getState() == NoriCellState.BLACK);
+    }
+
+    private boolean isMoreThanOneLonelyBlackCellAround(NoriCell cell) {
+        int count = 0;
+
+        // Check if top is lonely black cell
+        if (cell.getRow() > 0 && getCell(cell.getCol(), cell.getRow() - 1).getState() == NoriCellState.BLACK &&
+                !isCellPartOfDomino(getCell(cell.getCol(), cell.getRow() - 1)))
+            count++;
+
+        // Check if right is lonely black cell
+        if (cell.getCol() < getMaxCol() && getCell(cell.getCol() + 1, cell.getRow()).getState() == NoriCellState.BLACK &&
+                !isCellPartOfDomino(getCell(cell.getCol() + 1, cell.getRow())))
+            count++;
+
+        // Check if bottom is lonely black cell
+        if (cell.getRow() < getMaxRow() && getCell(cell.getCol(), cell.getRow() + 1).getState() == NoriCellState.BLACK &&
+                !isCellPartOfDomino(getCell(cell.getCol(), cell.getRow() + 1)))
+            count++;
+
+        // Check if left is lonely black cell
+        if (cell.getCol() > 0 && getCell(cell.getCol() - 1, cell.getRow()).getState() == NoriCellState.BLACK &&
+                !isCellPartOfDomino(getCell(cell.getCol() - 1, cell.getRow())))
+            count++;
+
+        return count > 1;
+    }
+
+    private boolean willThisPlacementEncapsulateALonelyBlackCell(NoriCell cell) {
+        // Check top
+        if (cell.getRow() > 0 && getCell(cell.getCol(), cell.getRow() - 1).getState() == NoriCellState.BLACK &&
+                willThisPlacementEncapsulateTheGivenCell(cell.getCol(), cell.getRow() - 1, NoriDominoDirection.BOTTOM))
+            return true;
+
+        // Check right
+        if (cell.getCol() < getMaxCol() && getCell(cell.getCol() + 1, cell.getRow()).getState() == NoriCellState.BLACK &&
+                willThisPlacementEncapsulateTheGivenCell(cell.getCol() + 1, cell.getRow(), NoriDominoDirection.LEFT))
+            return true;
+
+        // Check bottom
+        if (cell.getRow() < getMaxRow() && getCell(cell.getCol(), cell.getRow() + 1).getState() == NoriCellState.BLACK &&
+                willThisPlacementEncapsulateTheGivenCell(cell.getCol(), cell.getRow() + 1, NoriDominoDirection.TOP))
+            return true;
+
+        // Check left
+        return cell.getCol() > 0 && getCell(cell.getCol() - 1, cell.getRow()).getState() == NoriCellState.BLACK &&
+                willThisPlacementEncapsulateTheGivenCell(cell.getCol() - 1, cell.getRow(), NoriDominoDirection.RIGHT);
+    }
+
+    private boolean willThisPlacementEncapsulateTheGivenCell(int col, int row, NoriDominoDirection whereWillTheWhiteCellBePlaced) {
+        // Check top
+        if (row > 0 && getCell(col, row - 1).getState() != NoriCellState.WHITE &&
+                whereWillTheWhiteCellBePlaced != NoriDominoDirection.TOP)
+            return false;
+
+        // Check right
+        if (col < getMaxCol() && getCell(col + 1, row).getState() != NoriCellState.WHITE &&
+                whereWillTheWhiteCellBePlaced != NoriDominoDirection.RIGHT)
+            return false;
+
+        // Check bottom
+        if (row < getMaxRow() && getCell(col, row + 1).getState() != NoriCellState.WHITE &&
+                whereWillTheWhiteCellBePlaced != NoriDominoDirection.BOTTOM)
+            return false;
+
+        // Check left
+        return col <= 0 || getCell(col - 1, row).getState() == NoriCellState.WHITE ||
+                whereWillTheWhiteCellBePlaced == NoriDominoDirection.LEFT;
     }
 
     // Returns null if no Cell found
     public NoriCell findUnmarkedCell() {
-        for (NoriCell cell : noriCellList) {
-            if (cell.getState() == NoriCellState.UNMARKED)
-                return cell;
+        for (NoriCell cell : getNoriCells()) {
+            if (cell.getState() == NoriCellState.UNMARKED) return cell;
         }
         return null;
     }
 
-    public boolean checkIfPossible(int col, int row, NoriCellState state) {
-        NoriCell cellAtPosition = getCell(col, row);
-        if (state == NoriCellState.UNMARKED || cellAtPosition.getState() != NoriCellState.UNMARKED) {
-            System.out.println("Tried to check unmarked (as new state) or a place which is already marked!");
-            return false;
-        }
-
-        // Check the current region
-        int curRegionId = cellAtPosition.getRegionId();
-        List<NoriCell> cellsThisRegion = noriCellList.stream().filter(c -> c.getRegionId() == curRegionId).collect(Collectors.toList());
-        long nUnmarkedCells = cellsThisRegion.stream().filter(c -> c.getState() == NoriCellState.UNMARKED).count();
-        long nBlackCells = cellsThisRegion.stream().filter(c -> c.getState() == NoriCellState.MARKED_BLACK).count();
-
-        // Ensure that exactly two black cells are in each region
-        if (state == NoriCellState.MARKED_WHITE) {
-            if (nUnmarkedCells <= (2 - nBlackCells)) return false;
-        } else {
-            if (nBlackCells >= 2) return false;
-        }
-
-        // Ensure that no dominos are positioned together
-        if (state == NoriCellState.MARKED_BLACK) {
-            int numberOfLonelyNeighbours = 0;
-            // Check top neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.TOP)) {
-                if (hasNeighbourInDirection(col, row - 1, NoriDominoDirection.TOP) ||
-                        hasNeighbourInDirection(col, row - 1, NoriDominoDirection.LEFT) ||
-                        hasNeighbourInDirection(col, row - 1, NoriDominoDirection.RIGHT))
-                    return false;
-                else numberOfLonelyNeighbours += 1;
-            }
-            // Check right neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.RIGHT)) {
-                if (hasNeighbourInDirection(col + 1, row, NoriDominoDirection.TOP) ||
-                        hasNeighbourInDirection(col + 1, row, NoriDominoDirection.RIGHT) ||
-                        hasNeighbourInDirection(col + 1, row, NoriDominoDirection.BOTTOM))
-                    return false;
-                else numberOfLonelyNeighbours += 1;
-            }
-            // Check bottom neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.BOTTOM)) {
-                if (hasNeighbourInDirection(col, row + 1, NoriDominoDirection.BOTTOM) ||
-                        hasNeighbourInDirection(col, row + 1, NoriDominoDirection.LEFT) ||
-                        hasNeighbourInDirection(col, row + 1, NoriDominoDirection.RIGHT))
-                    return false;
-                else numberOfLonelyNeighbours += 1;
-            }
-            // Check left neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.LEFT)) {
-                if (hasNeighbourInDirection(col - 1, row, NoriDominoDirection.TOP) ||
-                        hasNeighbourInDirection(col - 1, row, NoriDominoDirection.LEFT) ||
-                        hasNeighbourInDirection(col - 1, row, NoriDominoDirection.BOTTOM))
-                    return false;
-                else numberOfLonelyNeighbours += 1;
-            }
-
-            if (numberOfLonelyNeighbours > 1)
-                return false;
-        }
-
-        // Ensure that white cell does not create a lonely black cell (with no domino partner)
-        if (state == NoriCellState.MARKED_WHITE) {
-            // Check top neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.TOP)) {
-                if (isSingleBlackCellEncapsulated(col, row - 1, NoriDominoDirection.BOTTOM)) {
-                    return false;
-                }
-            }
-            // Check right neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.RIGHT)) {
-                if (isSingleBlackCellEncapsulated(col + 1, row, NoriDominoDirection.LEFT)) {
-                    return false;
-                }
-            }
-            // Check bottom neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.BOTTOM)) {
-                if (isSingleBlackCellEncapsulated(col, row + 1, NoriDominoDirection.TOP)) {
-                    return false;
-                }
-            }
-            // Check left neighbour
-            if (hasNeighbourInDirection(col, row, NoriDominoDirection.LEFT)) {
-                return !isSingleBlackCellEncapsulated(col - 1, row, NoriDominoDirection.RIGHT);
-            }
-        }
-
-        return true;
+    public List<NoriCell> getNoriCells() {
+        return noriCells;
     }
 
-    // Check if it has a domino direction first! Then do not check this here!
-    private boolean isSingleBlackCellEncapsulated(int col, int row, NoriDominoDirection whereIsTheCellToPlace) {
-        // Check top
-        if (row > 0 && getCell(col, row - 1).getState() != NoriCellState.MARKED_WHITE && whereIsTheCellToPlace != NoriDominoDirection.TOP)
-            return false;
-        // Check right
-        if (col < getMaxColumn() && getCell(col + 1, row).getState() != NoriCellState.MARKED_WHITE && whereIsTheCellToPlace != NoriDominoDirection.RIGHT)
-            return false;
-        // Check bottom
-        if (row < getMaxRow() && getCell(col, row + 1).getState() != NoriCellState.MARKED_WHITE && whereIsTheCellToPlace != NoriDominoDirection.BOTTOM)
-            return false;
-        // Check left
-        return col <= 0 || getCell(col - 1, row).getState() == NoriCellState.MARKED_WHITE || whereIsTheCellToPlace == NoriDominoDirection.LEFT;
+    public List<NoriRegion> getNoriRegions() {
+        return noriRegions;
     }
 
-    private boolean hasNeighbourInDirection(int col, int row, NoriDominoDirection direction) {
-        // Check top
-        if (direction == NoriDominoDirection.TOP && row > 0 && getCell(col, row - 1).getState() == NoriCellState.MARKED_BLACK)
-            return true;
-        // Check right
-        if (direction == NoriDominoDirection.RIGHT && col < getMaxColumn() && getCell(col + 1, row).getState() == NoriCellState.MARKED_BLACK)
-            return true;
-        // Check bottom
-        if (direction == NoriDominoDirection.BOTTOM && row < getMaxRow() && getCell(col, row + 1).getState() == NoriCellState.MARKED_BLACK)
-            return true;
-        // Check left
-        return direction == NoriDominoDirection.LEFT && col > 0 && getCell(col - 1, row).getState() == NoriCellState.MARKED_BLACK;
+    public NoriCell getCell(int col, int row) {
+        return getNoriCells().get((maxCol + 1) * row + col);
+    }
+
+    public int getMaxRow() {
+        return maxRow;
+    }
+
+    public int getMaxCol() {
+        return maxCol;
     }
 }

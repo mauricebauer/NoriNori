@@ -7,10 +7,9 @@ import java.util.List;
 
 public class BacktrackingSolver implements ISolver {
     private final List<NoriCellState> possibleStates = new ArrayList<>() {{
-        add(NoriCellState.MARKED_BLACK);
-        add(NoriCellState.MARKED_WHITE);
+        add(NoriCellState.BLACK);
+        add(NoriCellState.WHITE);
     }};
-    private final Deque<NoriCell> stack = new ArrayDeque<>();
 
     @Override
     public boolean solve(NoriGame noriGame, boolean doOnlyOneStep) {
@@ -20,7 +19,7 @@ public class BacktrackingSolver implements ISolver {
             return true;  // Finished solving if no unmarked cell left
 
         for (NoriCellState state : possibleStates) {
-            if (noriGame.checkIfPossible(unmarkedCell.getCol(), unmarkedCell.getRow(), state)) {
+            if (noriGame.checkIfPossible(unmarkedCell, state)) {
                 unmarkedCell.setState(state);
                 if (solve(noriGame, doOnlyOneStep)) return true;
                 else unmarkedCell.setState(NoriCellState.UNMARKED);
@@ -34,15 +33,15 @@ public class BacktrackingSolver implements ISolver {
         System.out.println();
         System.out.println();
         for (int row = 0; row <= noriGame.getMaxRow(); row++) {
-            for (int col = 0; col <= noriGame.getMaxColumn(); col++) {
+            for (int col = 0; col <= noriGame.getMaxCol(); col++) {
                 switch (noriGame.getCell(col, row).getState()) {
                     case UNMARKED:
                         System.out.print("- ");
                         break;
-                    case MARKED_WHITE:
+                    case WHITE:
                         System.out.print("0 ");
                         break;
-                    case MARKED_BLACK:
+                    case BLACK:
                         System.out.print("X ");
                         break;
                 }

@@ -13,7 +13,6 @@ public class GridController {
 
     private final GridPane grid;
     private double currentSizeOfCell;
-    private int rows, columns;
 
     public GridController(GridPane grid) {
         if (grid == null)
@@ -21,13 +20,6 @@ public class GridController {
 
         this.grid = grid;
         currentSizeOfCell = SIZE_OF_CELL;
-    }
-
-    private void drawBorder(Pane cell, double top, double right, double bottom, double left) {
-        cell.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID,
-                CornerRadii.EMPTY,
-                new BorderWidths(top, right, bottom, left))));
     }
 
     public void resizeBoard(boolean shouldBeMadeBigger) {
@@ -48,10 +40,10 @@ public class GridController {
                 case UNMARKED:
                     node.setStyle("-fx-background-color: lightgray;");
                     break;
-                case MARKED_WHITE:
+                case WHITE:
                     node.setStyle("-fx-background-color: white;");
                     break;
-                case MARKED_BLACK:
+                case BLACK:
                     node.setStyle("-fx-background-color: gray;");
                     break;
             }
@@ -59,8 +51,8 @@ public class GridController {
     }
 
     public void createBoard(NoriGame noriGame) {
-        rows = noriGame.getMaxRow() + 1;  // Needed because maxRow == 0 needs 1 row and maxRow == 1 needs 2 rows
-        columns = noriGame.getMaxColumn() + 1;  // Same logic as line above
+        int rows = noriGame.getMaxRow() + 1;  // Because getMaxRow() is the index, the count is always + 1
+        int columns = noriGame.getMaxCol() + 1;  // Because getMaxCol() is the index, the count is always + 1
 
         // Reset GridPanel
         grid.setSnapToPixel(false);  // Needed for clearer and sharper edges in GUI
@@ -79,28 +71,28 @@ public class GridController {
         }
 
         // Create cells with correct borders
-        for (NoriCell noriCell : noriGame.getNoriCellList()) {
+        for (NoriCell noriCell : noriGame.getNoriCells()) {
             double topBorder, rightBorder, botBorder, leftBorder;
             topBorder = rightBorder = botBorder = leftBorder = BORDER_THICKNESS_NORMAL;
 
             int curCol = noriCell.getCol();
             int curRow = noriCell.getRow();
-            int curRegionId = noriCell.getRegionId();
+            int curRegionId = noriCell.getRegion();
 
             // Check top border
-            if (curRow <= 0 || noriGame.getCell(curCol, curRow - 1).getRegionId() != curRegionId) {
+            if (curRow <= 0 || noriGame.getCell(curCol, curRow - 1).getRegion() != curRegionId) {
                 topBorder = BORDER_THICKNESS_THICK;
             }
             // Check right border
-            if (curCol >= columns - 1 || noriGame.getCell(curCol + 1, curRow).getRegionId() != curRegionId) {
+            if (curCol >= columns - 1 || noriGame.getCell(curCol + 1, curRow).getRegion() != curRegionId) {
                 rightBorder = BORDER_THICKNESS_THICK;
             }
             // Check bottom border
-            if (curRow >= rows - 1 || noriGame.getCell(curCol, curRow + 1).getRegionId() != curRegionId) {
+            if (curRow >= rows - 1 || noriGame.getCell(curCol, curRow + 1).getRegion() != curRegionId) {
                 botBorder = BORDER_THICKNESS_THICK;
             }
             // Check left border
-            if (curCol <= 0 || noriGame.getCell(curCol - 1, curRow).getRegionId() != curRegionId) {
+            if (curCol <= 0 || noriGame.getCell(curCol - 1, curRow).getRegion() != curRegionId) {
                 leftBorder = BORDER_THICKNESS_THICK;
             }
 
@@ -110,5 +102,12 @@ public class GridController {
         }
 
         colorCells(noriGame);
+    }
+
+    private void drawBorder(Pane cell, double top, double right, double bottom, double left) {
+        cell.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID,
+                CornerRadii.EMPTY,
+                new BorderWidths(top, right, bottom, left))));
     }
 }
