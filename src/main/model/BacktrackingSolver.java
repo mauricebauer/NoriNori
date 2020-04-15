@@ -1,9 +1,6 @@
 package main.model;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class BacktrackingSolver implements ISolver {
     private final List<NoriCellState> possibleStates = new ArrayList<>() {{
@@ -16,16 +13,22 @@ public class BacktrackingSolver implements ISolver {
 
     @Override
     public boolean solve(NoriGame noriGame, boolean doOnlyOneStep) {
-        if (doOnlyOneStep && noriGame.findUnmarkedCell() != null) {
-            return solveStep(noriGame);
-        } else if (!doOnlyOneStep) {
-            boolean result = true;
-            while (noriGame.findUnmarkedCell() != null) {
-                result = solveStep(noriGame);
+        try {
+            if (doOnlyOneStep && noriGame.findUnmarkedCell() != null) {
+                return solveStep(noriGame);
+            } else if (!doOnlyOneStep) {
+                boolean result = true;
+                while (noriGame.findUnmarkedCell() != null) {
+                    result = solveStep(noriGame);
+                }
+                return result;
             }
-            return result;
+            return true;
+        } catch (NoSuchElementException e) {
+            // Exception will occur if stack is empty and tried to pop()
+            // This occurs if the gameboard is not valid / solvable
+            return false;
         }
-        return true;
     }
 
     private boolean solveStep(NoriGame noriGame) {
@@ -49,9 +52,7 @@ public class BacktrackingSolver implements ISolver {
 
         // Every other case where there is no more possibility -> backtrack
         cellToSolve.setState(NoriCellState.UNMARKED);
-        if (!stack.isEmpty()) stack.pop();
-        //if(stack.isEmpty())
-        //    System.out.println("Stack empty: Cell-" + cellToSolve.getCol() + "-" + cellToSolve.getRow());
+        stack.pop();  // Can throw an exception but it is handled in solve()
         return false;
     }
 
