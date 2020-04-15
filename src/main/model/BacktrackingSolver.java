@@ -7,7 +7,7 @@ public class BacktrackingSolver implements ISolver {
         add(NoriCellState.BLACK);
         add(NoriCellState.WHITE);
     }};
-    // The cells added to the stack are clones
+    // The cells added to the stack are clones of the original ones
     // (to store the move - never replace the original cell with the clone -> only the values)
     private final Deque<NoriCell> stack = new ArrayDeque<>();
 
