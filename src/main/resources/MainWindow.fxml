@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" onKeyPressed="#keyPressed"
-            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="main.controller.MainWindowController"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" fx:controller="norinori.controller.MainWindowController"
             onDragOver="#onDragOver" onDragDropped="#onDragDropped">
     <top>
         <ToolBar prefHeight="40.0">

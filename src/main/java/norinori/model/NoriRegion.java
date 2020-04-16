@@ -1,4 +1,4 @@
-package main.model;
+package norinori.model;
 
 import java.util.ArrayList;
 import java.util.List;

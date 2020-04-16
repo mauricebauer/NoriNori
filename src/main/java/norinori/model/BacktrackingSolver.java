@@ -1,7 +1,7 @@
-package main.model;
+package norinori.model;
 
 import javafx.application.Platform;
-import main.controller.MainWindowController;
+import norinori.controller.MainWindowController;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

@@ -1,0 +1,43 @@
+/*
+ * This file was generated with the help of the Gradle 'init' task.
+ */
+
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application.
+    id 'application'
+
+    // Apply the JavaFX plugin to support running the JavaFX application
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter API for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    // Use Google Gson for parsing the JSON data
+    implementation 'com.google.code.gson:gson:2.8.6'
+}
+
+javafx {
+    // Using the LTS version of JavaFX supported by Gluon
+    version = "11"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'norinori.App'
+}
+
+test {
+    // Use junit platform for unit tests
+    useJUnitPlatform()
+}

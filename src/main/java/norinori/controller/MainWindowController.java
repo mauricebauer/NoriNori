@@ -1,4 +1,4 @@
-package main.controller;
+package norinori.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,8 +10,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.model.BacktrackingSolver;
-import main.model.NoriGame;
+import norinori.model.BacktrackingSolver;
+import norinori.model.NoriGame;
 
 import java.io.File;
 import java.net.URL;

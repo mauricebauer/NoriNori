@@ -1,4 +1,4 @@
-package main.model;
+package norinori.model;
 
 public enum NoriDominoDirection {
     TOP,

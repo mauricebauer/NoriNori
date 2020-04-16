@@ -1,4 +1,4 @@
-package main.controller;
+package norinori.controller;
 
 import javafx.scene.control.Alert;
 

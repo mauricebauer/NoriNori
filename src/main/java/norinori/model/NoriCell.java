@@ -1,4 +1,4 @@
-package main.model;
+package norinori.model;
 
 public class NoriCell {
     private final int col;

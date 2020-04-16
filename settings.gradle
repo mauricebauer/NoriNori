@@ -1,0 +1,5 @@
+/*
+ * This file was generated with the help of the Gradle 'init' task.
+ */
+
+rootProject.name = 'norinori'

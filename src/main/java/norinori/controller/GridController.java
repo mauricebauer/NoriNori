@@ -1,10 +1,10 @@
-package main.controller;
+package norinori.controller;
 
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import main.model.NoriCell;
-import main.model.NoriGame;
+import norinori.model.NoriCell;
+import norinori.model.NoriGame;
 
 public class GridController {
     public static final double SIZE_OF_CELL = 40;
