@@ -10,8 +10,9 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import norinori.model.BacktrackingSolver;
 import norinori.model.NoriGame;
+import norinori.model.Solver;
+import norinori.model.UiHelper;
 
 import java.io.File;
 import java.net.URL;
@@ -20,7 +21,7 @@ import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
-    private final BacktrackingSolver solver = new BacktrackingSolver();
+    private final Solver solver = new Solver();
     public GridController gridController;
     public AlertController alertController;
     private NoriGame noriGame = new NoriGame();
@@ -44,16 +45,14 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void solveButtonClicked() {
-        setDisableButtons(true);
-        Thread solverThread = new Thread(() -> solver.solve(noriGame, false, this), "Solver");
+        Thread solverThread = new Thread(() -> solver.solve(noriGame, new UiHelper(this), false), "Solver");
         solverThread.setDaemon(true);
         solverThread.start();
     }
 
     @FXML
     private void stepButtonClicked() {
-        setDisableButtons(true);
-        new Thread(() -> solver.solve(noriGame, true, this), "Solver").start();
+        new Thread(() -> solver.solve(noriGame, new UiHelper(this), true), "Solver").start();
     }
 
     @FXML

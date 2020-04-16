@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-public class NoriGame {
+public class NoriGame implements INoriGame {
     // Indexes are always ((maxCol+1) * row) + col
     private final List<NoriCell> noriCells = new ArrayList<>();
     private final List<NoriRegion> noriRegions = new ArrayList<>();
@@ -59,6 +59,10 @@ public class NoriGame {
         }
     }
 
+    public boolean isSolved() {
+        return findUnmarkedCell() == null;
+    }
+
     // Mark all Cells as UNMARKED
     public void resetCells() {
         for (NoriCell cell : getNoriCells()) {
@@ -66,18 +70,18 @@ public class NoriGame {
         }
     }
 
-    public boolean checkIfPossible(NoriCell cell, NoriCellState state) {
+    public boolean checkStateAtCell(NoriCell cell, NoriCellState stateToCheck) {
         // Check if state to check is valid
-        if (state == NoriCellState.UNMARKED || cell.getState() != NoriCellState.UNMARKED)
+        if (stateToCheck == NoriCellState.UNMARKED || cell.getState() != NoriCellState.UNMARKED)
             System.out.println("WARNING! Tried to check unmarked cell or a place which is already marked!");
 
         // Check region
         NoriRegion regionOfCell = getNoriRegions().get(cell.getRegion());
-        if (!regionOfCell.checkIfPlacementInRegionIsValid(state))
+        if (!regionOfCell.checkIfPlacementInRegionIsValid(stateToCheck))
             return false;
 
         // Check black placement
-        if (state == NoriCellState.BLACK) {
+        if (stateToCheck == NoriCellState.BLACK) {
             if (isDominoAroundCell(cell))
                 return false;
 
@@ -86,7 +90,7 @@ public class NoriGame {
         }
 
         // Check white placement
-        return state != NoriCellState.WHITE || !willThisPlacementEncapsulateALonelyBlackCell(cell);
+        return stateToCheck != NoriCellState.WHITE || !willThisPlacementEncapsulateALonelyBlackCell(cell);
     }
 
     // Returns true if there is a domino around the cell and thus the placement not valid

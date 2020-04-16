@@ -3,6 +3,7 @@ package norinori.controller;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import norinori.model.INoriGame;
 import norinori.model.NoriCell;
 import norinori.model.NoriGame;
 
@@ -33,7 +34,7 @@ public class GridController {
         }
     }
 
-    public void colorCells(NoriGame noriGame) {
+    public void colorCells(INoriGame noriGame) {
         for (Node node : grid.getChildren()) {
             NoriCell cell = noriGame.getCell(GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
             switch (cell.getState()) {
