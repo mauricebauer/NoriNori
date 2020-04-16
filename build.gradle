@@ -27,7 +27,7 @@ dependencies {
 }
 
 javafx {
-    // Using the LTS version of JavaFX supported by Gluon
+    // Using the latest version of JavaFX
     version = "11"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
