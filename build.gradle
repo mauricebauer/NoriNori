@@ -28,7 +28,7 @@ dependencies {
 
 javafx {
     // Using the latest version of JavaFX
-    version = "11"
+    version = "14"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
