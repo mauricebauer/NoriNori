@@ -16,9 +16,9 @@ public class UiHelper implements IUiHelper {
     }
 
     @Override
-    public void startedSolving(boolean stepping) {
+    public void startedSolving() {
         Platform.runLater(() -> controller.setDisableButtons(true));
-        Platform.runLater(() -> controller.setStateLabelText(stepping ? "Stepping..." : "Solving..."));
+        Platform.runLater(() -> controller.setStateLabelText("Solving..."));
     }
 
     @Override
@@ -30,7 +30,10 @@ public class UiHelper implements IUiHelper {
     public void finishedSolving(INoriGame noriGame, boolean stepping, boolean steppingResult) {
         String stateText = "Solved";
         if (noriGame.isSolved()) stateText = "Solved successfully";
-        else if (!stepping) stateText = "Solving failed";
+        else if (!stepping) {
+            stateText = "Solving failed";
+            Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
+        }
         else if (steppingResult) stateText = "Stepped";
         else stateText = "Stepped back";
 

@@ -17,7 +17,7 @@ public class Solver {
             return;
         }
 
-        uiHelper.startedSolving(stepping);
+        uiHelper.startedSolving();
         try {
             NoriCell cellToSolve = getNextCell(noriGame);
 
