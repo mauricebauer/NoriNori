@@ -39,13 +39,13 @@ public class GridController {
             NoriCell cell = noriGame.getCell(GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
             switch (cell.getState()) {
                 case UNMARKED:
-                    node.setStyle("-fx-background-color: lightgray;");
+                    node.setStyle("-fx-background-color: #DEE2E6;");
                     break;
                 case WHITE:
                     node.setStyle("-fx-background-color: white;");
                     break;
                 case BLACK:
-                    node.setStyle("-fx-background-color: gray;");
+                    node.setStyle("-fx-background-color: #868E96;");
                     break;
             }
         }

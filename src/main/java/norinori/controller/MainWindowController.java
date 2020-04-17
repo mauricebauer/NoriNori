@@ -1,13 +1,17 @@
 package norinori.controller;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import norinori.model.NoriGame;
@@ -25,22 +29,31 @@ public class MainWindowController implements Initializable {
     public GridController gridController;
     public AlertController alertController;
     private NoriGame noriGame = new NoriGame();
+
+    // Variables needed for window movement
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     @FXML
-    private Label stateLabel;
+    private VBox dragAndDropField;
+
+    //@FXML
+    //private Label stateLabel;
     @FXML
-    private Button stepButton, solveButton, clearButton, openFileButton;
+    private Button stepButton, solveButton, clearButton;//, openFileButton;
+
     @FXML
     private GridPane grid;
 
     public void setStateLabelText(String text) {
-        stateLabel.setText(text);
+        //stateLabel.setText(text);
     }
 
     public void setDisableButtons(boolean state) {
-        stepButton.setDisable(state);
-        solveButton.setDisable(state);
-        clearButton.setDisable(state);
-        openFileButton.setDisable(state);
+        //stepButton.setDisable(state);
+        //solveButton.setDisable(state);
+        //clearButton.setDisable(state);
+        //openFileButton.setDisable(state);
     }
 
     @FXML
@@ -59,7 +72,7 @@ public class MainWindowController implements Initializable {
     private void clearButtonClicked() {
         noriGame.resetCells();
         gridController.colorCells(noriGame);
-        stateLabel.setText("Cleared");
+        //stateLabel.setText("Cleared");
         solver.reset();
     }
 
@@ -71,15 +84,15 @@ public class MainWindowController implements Initializable {
     @FXML
     private void zoomInButtonClicked() {
         gridController.resizeBoard(true);
-        stateLabel.getScene().getWindow().sizeToScene();
-        stateLabel.setText("Zoomed in");
+        //stateLabel.getScene().getWindow().sizeToScene();
+        //stateLabel.setText("Zoomed in");
     }
 
     @FXML
     private void zoomOutButtonClicked() {
         gridController.resizeBoard(false);
-        stateLabel.getScene().getWindow().sizeToScene();
-        stateLabel.setText("Zoomed out");
+        //stateLabel.getScene().getWindow().sizeToScene();
+        //stateLabel.setText("Zoomed out");
     }
 
     @FXML
@@ -87,7 +100,7 @@ public class MainWindowController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open NoriNori board with json-Format");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        File file = fileChooser.showOpenDialog(stateLabel.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(solveButton.getScene().getWindow());
         if (file != null) {
             readGameFromFile(file.getAbsolutePath());
         }
@@ -112,7 +125,7 @@ public class MainWindowController implements Initializable {
                 clearButtonClicked();
                 break;
             case F8:
-                ((Stage) stateLabel.getScene().getWindow()).close();
+                //((Stage) stateLabel.getScene().getWindow()).close();
                 break;
         }
     }
@@ -131,15 +144,17 @@ public class MainWindowController implements Initializable {
             noriGame = new NoriGame(content);
             solver.reset();
             gridController.createBoard(noriGame);
-            stateLabel.setText("File loaded");
-            ((Stage) stateLabel.getScene().getWindow()).setTitle(path.getFileName() + " - NoriNori Solver");
+            grid.setVisible(true);
+            dragAndDropField.setVisible(false);
+            //stateLabel.setText("File loaded");
+            //((Stage) stateLabel.getScene().getWindow()).setTitle(path.getFileName() + " - NoriNori Solver");
         } catch (Exception e) {
             noriGame = new NoriGame();
             gridController.createBoard(noriGame);
-            stateLabel.setText("File not loaded");
+            //stateLabel.setText("File not loaded");
             alertController.showFileError();
         }
-        stateLabel.getScene().getWindow().sizeToScene();
+        solveButton.getScene().getWindow().sizeToScene();
     }
 
     @FXML
@@ -158,5 +173,27 @@ public class MainWindowController implements Initializable {
             readGameFromFile(path);
         }
         dragEvent.consume();
+    }
+
+    @FXML
+    private void closeButtonClicked() {
+        Platform.exit();
+    }
+
+    @FXML
+    private void minimizeButtonClicked(ActionEvent e) {
+        ((Stage) ((Button) e.getSource()).getScene().getWindow()).setIconified(true);
+    }
+
+    @FXML
+    private void onMousePressed(MouseEvent e) {
+        xOffset = ((Node) e.getSource()).getScene().getWindow().getX() - e.getScreenX();
+        yOffset = ((Node) e.getSource()).getScene().getWindow().getY() - e.getScreenY();
+    }
+
+    @FXML
+    private void onMouseDragged(MouseEvent e) {
+        ((Node) e.getSource()).getScene().getWindow().setX(e.getScreenX() + xOffset);
+        ((Node) e.getSource()).getScene().getWindow().setY(e.getScreenY() + yOffset);
     }
 }

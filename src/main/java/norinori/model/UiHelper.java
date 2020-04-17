@@ -33,8 +33,7 @@ public class UiHelper implements IUiHelper {
         else if (!stepping) {
             stateText = "Solving failed";
             Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
-        }
-        else if (steppingResult) stateText = "Stepped";
+        } else if (steppingResult) stateText = "Stepped";
         else stateText = "Stepped back";
 
         String finalStateText = stateText;
