@@ -18,7 +18,6 @@ public class UiHelper implements IUiHelper {
     @Override
     public void startedSolving() {
         Platform.runLater(() -> controller.setDisableButtons(true));
-        Platform.runLater(() -> controller.setStateLabelText("Solving..."));
     }
 
     @Override
@@ -28,17 +27,10 @@ public class UiHelper implements IUiHelper {
 
     @Override
     public void finishedSolving(INoriGame noriGame, boolean stepping, boolean steppingResult) {
-        String stateText = "Solved";
-        if (noriGame.isSolved()) stateText = "Solved successfully";
-        else if (!stepping) {
-            stateText = "Solving failed";
+        if (!stepping && !noriGame.isSolved())
             Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
-        } else if (steppingResult) stateText = "Stepped";
-        else stateText = "Stepped back";
 
-        String finalStateText = stateText;
         Platform.runLater(() -> controller.gridController.colorCells(noriGame));
         Platform.runLater(() -> controller.setDisableButtons(false));
-        Platform.runLater(() -> controller.setStateLabelText(finalStateText));
     }
 }

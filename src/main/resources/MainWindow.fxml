@@ -1,111 +1,235 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane minHeight="400" minWidth="640" onKeyPressed="#keyPressed" styleClass="main" stylesheets="@Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="norinori.controller.MainWindowController">
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane minHeight="400" minWidth="640" onKeyPressed="#keyPressed" styleClass="main" stylesheets="@Style.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="norinori.controller.MainWindowController">
     <center>
-        <StackPane onDragDropped="#onDragDropped" onDragOver="#onDragOver" prefHeight="150.0" prefWidth="200.0" styleClass="body" BorderPane.alignment="CENTER">
-            <HBox fillHeight="false" maxHeight="25.0" StackPane.alignment="TOP_CENTER">
-                <children>
-                    <Region onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" prefHeight="25.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                    <Button mnemonicParsing="false" onAction="#minimizeButtonClicked" prefHeight="25.0" prefWidth="42.0" text="_">
-                        <font>
-                            <Font size="20.0" />
-                        </font>
-                        <padding>
-                            <Insets left="-5.0" right="-5.0" top="-10.0" />
-                        </padding>
-                    </Button>
-                    <Button mnemonicParsing="false" onAction="#closeButtonClicked" prefHeight="25.0" prefWidth="42.0" styleClass="closeButton" text="×">
-                        <font>
-                            <Font size="20.0" />
-                        </font>
-                        <padding>
-                            <Insets bottom="-5.0" top="-5.0" />
-                        </padding>
-                    </Button>
-                </children>
+        <StackPane onDragDropped="#onDragDropped" onDragOver="#onDragOver" styleClass="body">
+            <HBox maxHeight="25.0" StackPane.alignment="TOP_CENTER">
+                <Region onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed" HBox.hgrow="ALWAYS"/>
+                <Button maxHeight="25.0" maxWidth="42.0" minHeight="25.0" minWidth="42.0" mnemonicParsing="false"
+                        onAction="#minimizeButtonClicked" prefHeight="25.0" prefWidth="42.0" text="_">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets left="-5.0" right="-5.0" top="-10.0"/>
+                    </padding>
+                </Button>
+                <Button maxHeight="25.0" maxWidth="42.0" minHeight="25.0" minWidth="42.0" mnemonicParsing="false"
+                        onAction="#closeButtonClicked" prefHeight="25.0" prefWidth="42.0" styleClass="closeButton"
+                        text="×">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets bottom="-5.0" top="-5.0"/>
+                    </padding>
+                </Button>
             </HBox>
-            <VBox fx:id="dragAndDropField" alignment="CENTER" onMouseClicked="#openFileButtonClicked" prefHeight="200.0" prefWidth="100.0">
-                <children>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                        <Image url="@logo.png" />
-                    </ImageView>
-                    <Label style="-fx-font-size: 10pt;" text="Drag and drop a JSON-file here.&#10;Or click here to open a file." textAlignment="CENTER">
-                        <VBox.margin>
-                            <Insets top="20.0" />
-                        </VBox.margin>
-                    </Label>
-                </children>
+            <VBox fx:id="dragAndDropField" alignment="CENTER" onMouseClicked="#openFileButtonClicked">
                 <StackPane.margin>
-                    <Insets top="25.0" />
+                    <Insets top="25.0"/>
                 </StackPane.margin>
                 <cursor>
-                    <Cursor fx:constant="HAND" />
+                    <Cursor fx:constant="HAND"/>
                 </cursor>
+                <ImageView fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@drag.png"/>
+                </ImageView>
+                <Label style="-fx-font-size: 10pt;"
+                       text="Drag and drop a JSON-file here.&#10;Or click here to open a file." textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="20.0"/>
+                    </VBox.margin>
+                </Label>
             </VBox>
             <GridPane fx:id="grid" alignment="CENTER" visible="false">
                 <StackPane.margin>
-                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
                 </StackPane.margin>
             </GridPane>
+            <HBox maxHeight="25.0" StackPane.alignment="BOTTOM_CENTER">
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="zoomInButton" disable="true" maxHeight="25.0" maxWidth="42.0" minHeight="25.0"
+                        minWidth="42.0" mnemonicParsing="false" onAction="#zoomInButtonClicked" prefHeight="25.0"
+                        prefWidth="42.0" text="+">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets top="-4.0"/>
+                    </padding>
+                    <tooltip>
+                        <Tooltip text="Make grid larger"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="zoomOutButton" disable="true" maxHeight="25.0" maxWidth="42.0" minHeight="25.0"
+                        minWidth="42.0" mnemonicParsing="false" onAction="#zoomOutButtonClicked" prefHeight="25.0"
+                        prefWidth="42.0" text="-">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <padding>
+                        <Insets top="-4.0"/>
+                    </padding>
+                    <tooltip>
+                        <Tooltip text="Make grid smaller"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="saveScreenButton" disable="true" layoutX="385.0" layoutY="10.0" maxHeight="25.0"
+                        maxWidth="42.0" minHeight="25.0" minWidth="42.0" mnemonicParsing="false"
+                        onAction="#saveScreenButtonClicked" prefHeight="25.0" prefWidth="42.0">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@ar-camera.png"/>
+                        </ImageView>
+                    </graphic>
+                    <padding>
+                        <Insets top="-2.0"/>
+                    </padding>
+                    <tooltip>
+                        <Tooltip text="Save current grid as an image"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="openFileButton" layoutX="428.0" layoutY="10.0" maxHeight="25.0" maxWidth="42.0"
+                        minHeight="25.0" minWidth="42.0" mnemonicParsing="false" onAction="#openFileButtonClicked"
+                        prefHeight="25.0" prefWidth="42.0">
+                    <font>
+                        <Font size="20.0"/>
+                    </font>
+                    <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@folder.png"/>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <padding>
+                        <Insets top="-2.0"/>
+                    </padding>
+                    <tooltip>
+                        <Tooltip text="Open a JSON file [F2]"/>
+                    </tooltip>
+                </Button>
+            </HBox>
         </StackPane>
     </center>
     <left>
         <VBox prefWidth="180.0" styleClass="sidebar">
             <HBox alignment="CENTER" onMouseDragged="#onMouseDragged" onMousePressed="#onMousePressed">
-                <children>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="@logo.png" />
-                        </image>
-                        <HBox.margin>
-                            <Insets top="20.0" />
-                        </HBox.margin>
-                    </ImageView>
-                    <Label prefHeight="50.0" text="NoriNori&#10;Solver">
-                        <HBox.margin>
-                            <Insets left="10.0" top="20.0" />
-                        </HBox.margin>
-                    </Label>
-                </children>
                 <VBox.margin>
-                    <Insets />
+                    <Insets/>
                 </VBox.margin>
+                <padding>
+                    <Insets bottom="20.0"/>
+                </padding>
+                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets top="20.0"/>
+                    </HBox.margin>
+                    <Image url="@logo.png"/>
+                </ImageView>
+                <Label prefHeight="40.0" text="NoriNori&#10;Solver">
+                    <HBox.margin>
+                        <Insets left="10.0" top="20.0"/>
+                    </HBox.margin>
+                    <padding>
+                        <Insets top="-3.0"/>
+                    </padding>
+                </Label>
             </HBox>
-            <Region VBox.vgrow="ALWAYS" />
-            <Button fx:id="stepButton" mnemonicParsing="false" onAction="#stepButtonClicked" prefHeight="40.0" prefWidth="180.0" text="Step" />
-            <Button fx:id="solveButton" mnemonicParsing="false" onAction="#solveButtonClicked" prefHeight="40.0" prefWidth="180.0" text="Solve" />
-            <Button fx:id="clearButton" mnemonicParsing="false" onAction="#clearButtonClicked" prefHeight="40.0" prefWidth="180.0" text="Clear">
+            <GridPane fx:id="statisticsGrid" minWidth="180.0" visible="false">
+                <columnConstraints>
+                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS"/>
+                    <ColumnConstraints halignment="CENTER" hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints valignment="TOP"/>
+                </rowConstraints>
                 <VBox.margin>
-                    <Insets bottom="40.0" />
+                    <Insets top="20.0"/>
+                </VBox.margin>
+                <Label fx:id="sizeLabel" text="10x10"/>
+                <Label fx:id="regionsLabel" text="28" GridPane.columnIndex="1"/>
+                <Label style="-fx-font-size: 10pt;" text="Size" GridPane.rowIndex="1"/>
+                <Label style="-fx-font-size: 10pt;" text="Regions" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <padding>
+                    <Insets left="15.0" right="15.0"/>
+                </padding>
+            </GridPane>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button fx:id="stepButton" alignment="BASELINE_LEFT" disable="true" graphicTextGap="25.0"
+                    mnemonicParsing="false" onAction="#stepButtonClicked" prefHeight="40.0" prefWidth="180.0"
+                    text="Step">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@next.png"/>
+                    </ImageView>
+                </graphic>
+                <padding>
+                    <Insets left="30.0"/>
+                </padding>
+                <tooltip>
+                    <Tooltip text="Try to step using backtracking [F5]"/>
+                </tooltip>
+                <VBox.margin>
+                    <Insets/>
                 </VBox.margin>
             </Button>
-            <HBox>
-                <children>
-                    <Hyperlink style="-fx-font-size: 9pt;" text="Attributions" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Hyperlink layoutX="10.0" layoutY="10.0" style="-fx-font-size: 9pt;" text="Maurice Bauer" />
-                </children>
+            <Button fx:id="solveButton" alignment="BASELINE_LEFT" disable="true" graphicTextGap="25.0"
+                    mnemonicParsing="false" onAction="#solveButtonClicked" prefHeight="40.0" prefWidth="180.0"
+                    text="Solve">
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@arrows.png"/>
+                    </ImageView>
+                </graphic>
                 <padding>
-                    <Insets bottom="2.0" left="5.0" right="5.0" />
+                    <Insets left="30.0"/>
                 </padding>
+                <tooltip>
+                    <Tooltip text="Try to solve the board using backtracking [F6]"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="clearButton" alignment="BASELINE_LEFT" disable="true" graphicTextGap="25.0"
+                    mnemonicParsing="false" onAction="#clearButtonClicked" prefHeight="40.0" prefWidth="180.0"
+                    text="Clear">
+                <VBox.margin>
+                    <Insets bottom="30.0"/>
+                </VBox.margin>
+                <graphic>
+                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@undo.png"/>
+                    </ImageView>
+                </graphic>
+                <padding>
+                    <Insets left="30.0"/>
+                </padding>
+                <tooltip>
+                    <Tooltip text="Clear the current state of the board [F7]"/>
+                </tooltip>
+            </Button>
+            <HBox>
+                <padding>
+                    <Insets bottom="2.0" left="5.0" right="5.0"/>
+                </padding>
+                <Hyperlink style="-fx-font-size: 9pt;" text="Attributions"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Hyperlink layoutX="10.0" layoutY="10.0" style="-fx-font-size: 9pt;" text="Maurice Bauer"/>
             </HBox>
             <BorderPane.margin>
-                <Insets />
+                <Insets/>
             </BorderPane.margin>
         </VBox>
     </left>
