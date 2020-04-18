@@ -14,7 +14,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // TODO: Set a cool icon for MainWindow and HelpWindow
         Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
         primaryStage.setTitle("NoriNori Solver");
         primaryStage.setResizable(false);

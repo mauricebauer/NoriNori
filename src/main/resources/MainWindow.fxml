@@ -6,8 +6,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<BorderPane minHeight="400" minWidth="640" onKeyPressed="#keyPressed" styleClass="main" stylesheets="@Style.css"
-            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="400" minWidth="640" onKeyPressed="#keyPressed" styleClass="main"
+            stylesheets="@Style.css" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="norinori.controller.MainWindowController">
     <center>
         <StackPane onDragDropped="#onDragDropped" onDragOver="#onDragOver" styleClass="body">
@@ -224,9 +224,10 @@
                 <padding>
                     <Insets bottom="2.0" left="5.0" right="5.0"/>
                 </padding>
-                <Hyperlink style="-fx-font-size: 9pt;" text="Attributions"/>
+                <Hyperlink onAction="#attributionsClicked" style="-fx-font-size: 9pt;" text="Attributions"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Hyperlink layoutX="10.0" layoutY="10.0" style="-fx-font-size: 9pt;" text="Maurice Bauer"/>
+                <Hyperlink layoutX="10.0" layoutY="10.0" onAction="#developerClicked" style="-fx-font-size: 9pt;"
+                           text="Maurice Bauer"/>
             </HBox>
             <BorderPane.margin>
                 <Insets/>

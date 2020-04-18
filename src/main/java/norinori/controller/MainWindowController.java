@@ -24,6 +24,7 @@ import norinori.model.Solver;
 import norinori.model.UiHelper;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
@@ -88,7 +89,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private void helpButtonClicked() {
-        alertController.showHelpAlert();
+        alertController.showAttributions();
     }
 
     @FXML
@@ -232,5 +233,19 @@ public class MainWindowController implements Initializable {
     private void onMouseDragged(MouseEvent e) {
         ((Node) e.getSource()).getScene().getWindow().setX(e.getScreenX() + xOffset);
         ((Node) e.getSource()).getScene().getWindow().setY(e.getScreenY() + yOffset);
+    }
+
+    @FXML
+    private void attributionsClicked() {
+        alertController.showAttributions();
+    }
+
+    @FXML
+    private void developerClicked() {
+        try {
+            Desktop.getDesktop().browse(new URL("https://github.com/mauricebauer").toURI());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
