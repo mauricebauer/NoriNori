@@ -6,25 +6,25 @@ import java.util.NoSuchElementException;
 
 // This solver uses backtracking
 public class Solver {
-    public static final int uiUpdateFrequency = 50000;  // how many loops should be iterated until next ui refresh
     // The cells added to the stack are clones of the original ones
     // (to store the move - do not replace the original cell with the clone -> only the values)
-    private final Deque<NoriCell> stack = new ArrayDeque<>();
+    public final Deque<NoriCell> stack = new ArrayDeque<>();
+    public int uiUpdateFrequency = 50000;  // how many loops should be iterated until next ui refresh
 
     public void solve(NoriGame noriGame, UiHelper uiHelper, boolean stepping) {
         if (noriGame.isSolved()) {
-            uiHelper.finishedSolving(noriGame, stepping);
+            if (uiHelper != null) uiHelper.finishedSolving(noriGame, stepping);
             return;
         }
 
-        uiHelper.startedSolving();
+        if (uiHelper != null) uiHelper.startedSolving();
         try {
             NoriCell cellToSolve = getNextCell(noriGame);
 
             if (stepping) {
                 if (cellToSolve != null)
                     solveStep(noriGame, cellToSolve);
-                uiHelper.finishedSolving(noriGame, true);
+                if (uiHelper != null) uiHelper.finishedSolving(noriGame, true);
                 return;
             }
 
@@ -33,15 +33,15 @@ public class Solver {
                 solveStep(noriGame, cellToSolve);
                 cellToSolve = getNextCell(noriGame);
                 if (++uiUpdateCounter > uiUpdateFrequency) {
-                    uiHelper.updateCellColor(noriGame);
+                    if (uiHelper != null) uiHelper.updateCellColor(noriGame);
                     uiUpdateCounter = 0;
                 }
             }
-            uiHelper.finishedSolving(noriGame, false);
+            if (uiHelper != null) uiHelper.finishedSolving(noriGame, false);
         } catch (NoSuchElementException e) {
             // Exception will occur if stack is empty and tried to pop()
             // This occurs if the board is not valid / solvable
-            uiHelper.finishedSolving(noriGame, stepping);
+            if (uiHelper != null) uiHelper.finishedSolving(noriGame, stepping);
         }
     }
 
