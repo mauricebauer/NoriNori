@@ -62,6 +62,7 @@ public class MainWindowController implements Initializable {
     }
 
     public void saveScreenButtonClicked() {
+        if (gameController.isSolverRunning) return;
         WritableImage image = grid.snapshot(new SnapshotParameters(), null);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save current grid as an image");

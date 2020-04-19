@@ -25,12 +25,10 @@ public class GridController {
     public void resizeBoard(boolean shouldBeMadeBigger) {
         currentSizeOfCell = shouldBeMadeBigger ? currentSizeOfCell * 1.1 : currentSizeOfCell / 1.1;
 
-        for (RowConstraints row : grid.getRowConstraints()) {
+        for (RowConstraints row : grid.getRowConstraints())
             row.setPrefHeight(currentSizeOfCell);
-        }
-        for (ColumnConstraints column : grid.getColumnConstraints()) {
+        for (ColumnConstraints column : grid.getColumnConstraints())
             column.setPrefWidth(currentSizeOfCell);
-        }
     }
 
     public void colorCells(NoriGame noriGame) {
