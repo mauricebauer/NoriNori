@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -57,8 +58,8 @@ public class NoriGame implements INoriGame {
 
     public boolean checkStateAtCell(NoriCell cell, NoriCellState stateToCheck) {
         // Check if state to check is valid
-        if (stateToCheck == NoriCellState.UNMARKED || cell.getState() != NoriCellState.UNMARKED)
-            System.out.println("WARNING! Tried to check unmarked cell or a place which is already marked!");
+        if (stateToCheck == NoriCellState.UNMARKED)
+            throw new InvalidParameterException("Check of UNMARKED state not allowed!");
 
         // Check region
         NoriRegion regionOfCell = getNoriRegions().get(cell.getRegion());
@@ -98,7 +99,7 @@ public class NoriGame implements INoriGame {
                 (cell.getCol() > 0 && getCell(cell.getCol() - 1, cell.getRow()).getState() == NoriCellState.BLACK);
     }
 
-    private boolean isMoreThanOneLonelyBlackCellAround(NoriCell cell) {
+    public boolean isMoreThanOneLonelyBlackCellAround(NoriCell cell) {
         int count = 0;
 
         // Check if top is lonely black cell
@@ -124,7 +125,7 @@ public class NoriGame implements INoriGame {
         return count > 1;
     }
 
-    private boolean willThisPlacementEncapsulateALonelyBlackCell(NoriCell cell) {
+    public boolean willThisPlacementEncapsulateALonelyBlackCell(NoriCell cell) {
         // Check top
         if (cell.getRow() > 0 && getCell(cell.getCol(), cell.getRow() - 1).getState() == NoriCellState.BLACK &&
                 willThisPlacementEncapsulateTheGivenCell(cell.getCol(), cell.getRow() - 1, NoriDominoDirection.BOTTOM))
@@ -145,7 +146,7 @@ public class NoriGame implements INoriGame {
                 willThisPlacementEncapsulateTheGivenCell(cell.getCol() - 1, cell.getRow(), NoriDominoDirection.RIGHT);
     }
 
-    private boolean willThisPlacementEncapsulateTheGivenCell(int col, int row, NoriDominoDirection whereWillTheWhiteCellBePlaced) {
+    public boolean willThisPlacementEncapsulateTheGivenCell(int col, int row, NoriDominoDirection whereWillTheWhiteCellBePlaced) {
         // Check top
         if (row > 0 && getCell(col, row - 1).getState() != NoriCellState.WHITE &&
                 whereWillTheWhiteCellBePlaced != NoriDominoDirection.TOP)
