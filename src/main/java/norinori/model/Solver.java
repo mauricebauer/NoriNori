@@ -22,10 +22,9 @@ public class Solver {
             NoriCell cellToSolve = getNextCell(noriGame);
 
             if (stepping) {
-                boolean result = false;
                 if (cellToSolve != null)
-                    result = solveStep(noriGame, cellToSolve);
-                uiHelper.finishedSolving(noriGame, true, result);
+                    solveStep(noriGame, cellToSolve);
+                uiHelper.finishedSolving(noriGame, true);
                 return;
             }
 
@@ -46,12 +45,12 @@ public class Solver {
         }
     }
 
-    private boolean solveStep(INoriGame noriGame, NoriCell cellToSolve) {
+    private void solveStep(INoriGame noriGame, NoriCell cellToSolve) {
         if (cellToSolve.getState() == NoriCellState.UNMARKED &&
                 noriGame.checkStateAtCell(cellToSolve, NoriCellState.BLACK)) {
             cellToSolve.setState(NoriCellState.BLACK);
             stack.push(new NoriCell(cellToSolve));  // Store move as clone on stack
-            return true;
+            return;
         }
 
         if (cellToSolve.getState() == NoriCellState.UNMARKED || cellToSolve.getState() == NoriCellState.BLACK) {
@@ -59,14 +58,13 @@ public class Solver {
             if (noriGame.checkStateAtCell(cellToSolve, NoriCellState.WHITE)) {
                 cellToSolve.setState(NoriCellState.WHITE);
                 stack.push(new NoriCell(cellToSolve));  // Store move as clone on stack
-                return true;
+                return;
             }
         }
 
         // Every other case where there is no more possibility -> backtrack
         cellToSolve.setState(NoriCellState.UNMARKED);
         stack.pop();  // Can throw an exception but it is handled in solve()
-        return false;
     }
 
     public void reset() {
