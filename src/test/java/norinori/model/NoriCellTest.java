@@ -16,7 +16,7 @@ class NoriCellTest {
     @Test
     void NoriCell_ValidParameters_ThrowsNoExceptionAndValuesSetCorrectly() {
         NoriCell cell = new NoriCell(0, 1, 2);
-        assertEquals(20, cell.getCol());  // TODO: Correct wrong test
+        assertEquals(0, cell.getCol());
         assertEquals(1, cell.getRow());
         assertEquals(2, cell.getRegion());
     }
