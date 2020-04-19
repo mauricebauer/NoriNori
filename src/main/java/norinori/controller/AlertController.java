@@ -1,6 +1,10 @@
 package norinori.controller;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 
 public class AlertController {
     public void showNotSolvableAlert() {
@@ -11,13 +15,17 @@ public class AlertController {
         alert.showAndWait();
     }
 
-    public void showHelpAlert() {
-        // TODO: Add the correct content (Keys and License for Icons)
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Help - NoriNori Solver");
-        alert.setHeaderText("NoriNori Solver V0.1");
-        alert.setContentText("Use the following keys...\nHere is the license...");
-        alert.showAndWait();
+    public void showAttributions() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/AttributionsWindow.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("NoriNori Solver - Attributions");
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (Exception e) {
+            System.out.println("Could not open attributions-window");
+        }
     }
 
     public void showFileError() {

@@ -208,4 +208,9 @@ public class NoriGame implements INoriGame {
     public int getMaxCol() {
         return maxCol;
     }
+
+    @Override
+    public int getMaxRegion() {
+        return getNoriRegions().size() - 1;
+    }
 }

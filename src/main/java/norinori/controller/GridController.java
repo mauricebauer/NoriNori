@@ -5,7 +5,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import norinori.model.INoriGame;
 import norinori.model.NoriCell;
-import norinori.model.NoriGame;
 
 public class GridController {
     public static final double SIZE_OF_CELL = 40;
@@ -39,19 +38,19 @@ public class GridController {
             NoriCell cell = noriGame.getCell(GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
             switch (cell.getState()) {
                 case UNMARKED:
-                    node.setStyle("-fx-background-color: lightgray;");
+                    node.setStyle("-fx-background-color: #DEE2E6;");
                     break;
                 case WHITE:
                     node.setStyle("-fx-background-color: white;");
                     break;
                 case BLACK:
-                    node.setStyle("-fx-background-color: gray;");
+                    node.setStyle("-fx-background-color: #868E96;");
                     break;
             }
         }
     }
 
-    public void createBoard(NoriGame noriGame) {
+    public void createBoard(INoriGame noriGame) {
         int rows = noriGame.getMaxRow() + 1;  // Because getMaxRow() is the index, the count is always + 1
         int columns = noriGame.getMaxCol() + 1;  // Because getMaxCol() is the index, the count is always + 1
 
