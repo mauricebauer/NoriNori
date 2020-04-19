@@ -7,6 +7,10 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 public class AlertController {
+    /**
+     * Shows an alert that the solving of the current game was not successful.
+     * The alert must be confirmed.
+     */
     public void showNotSolvableAlert() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Solving failed");
@@ -15,6 +19,9 @@ public class AlertController {
         alert.showAndWait();
     }
 
+    /**
+     * Shows the attributions and keyboard shortcuts as a separate window
+     */
     public void showAttributions() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/AttributionsWindow.fxml"));
@@ -28,6 +35,10 @@ public class AlertController {
         }
     }
 
+    /**
+     * Shows an error. Must be confirmed to continue.
+     * Should be shown if the loading of a JSON file failed.
+     */
     public void showFileError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Failed to read file");

@@ -11,6 +11,12 @@ public class Solver {
     public final Deque<NoriCell> stack = new ArrayDeque<>();
     public int uiUpdateFrequency = 50000;  // how many loops should be iterated until next ui refresh
 
+    /**
+     * Solve the passed NoriGame and store the result in that game
+     * @param noriGame The game which have to solved and the result stored in
+     * @param uiHelper UiHelper class used to update the GUI (from Solver thread)
+     * @param stepping True if only one backtracking step should be performed. False if game should be solved completely.
+     */
     public void solve(NoriGame noriGame, UiHelper uiHelper, boolean stepping) {
         if (noriGame.isSolved()) {
             if (uiHelper != null) uiHelper.finishedSolving(noriGame, stepping);
@@ -45,6 +51,11 @@ public class Solver {
         }
     }
 
+    /**
+     * Solve one step of the passed game at the passed cell
+     * @param noriGame The game to solve and store the result to
+     * @param cellToSolve The cell where the state should be found
+     */
     private void solveStep(NoriGame noriGame, NoriCell cellToSolve) {
         if (cellToSolve.getState() == NoriCellState.UNMARKED &&
                 noriGame.checkStateAtCell(cellToSolve, NoriCellState.BLACK)) {
@@ -67,10 +78,18 @@ public class Solver {
         stack.pop();  // Can throw an exception but it is handled in solve()
     }
 
+    /**
+     * Reset the current state of the solver to start a new solving
+     */
     public void reset() {
         stack.clear();
     }
 
+    /**
+     * Get the next cell which has to be solved. Goes from top left to bottom right line by line.
+     * @param noriGame The game which should be solved
+     * @return The original cell which should be solved by the next solver step
+     */
     private NoriCell getNextCell(NoriGame noriGame) {
         if (stack.isEmpty()) return noriGame.getCell(0, 0);
 

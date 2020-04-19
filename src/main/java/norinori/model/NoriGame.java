@@ -16,6 +16,11 @@ public class NoriGame {
     private final List<NoriRegion> noriRegions = new ArrayList<>();
     private final int maxRow, maxCol;
 
+    /**
+     * Constructor for NoriGame which creates a NoriNori Board from a JSON string
+     * @param jsonString Valid JSON string (e.g. "[[0,0],[1,1]]" for a 2x2 board with 2 regions)
+     * @throws Exception Thrown if Json string or Json board is not valid
+     */
     public NoriGame(String jsonString) {
         // Parse JSON
         Type jsonType = new TypeToken<ArrayList<ArrayList<Integer>>>() {
@@ -45,17 +50,30 @@ public class NoriGame {
         }
     }
 
+    /**
+     * Check if the board is solved (board is considered solved if there is no cell UNMARKED anymore)
+     * @return True if the game is solved
+     */
     public boolean isSolved() {
         return findUnmarkedCell() == null;
     }
 
-    // Mark all Cells as UNMARKED
+    /**
+     * Marks all cells of the game as UNMARKED
+     */
     public void resetCells() {
         for (NoriCell cell : getNoriCells()) {
             cell.setState(NoriCellState.UNMARKED);
         }
     }
 
+    /**
+     * Checks if the passed state is allowed to be applied to the passed cell
+     * @param cell Cell at which the passed state should be validated
+     * @param stateToCheck Future state of the cell which should be validated
+     * @return True if the passed state can be applied to the passed cell and the board is still valid
+     * @throws InvalidParameterException Thrown if state to check is UNMARKED
+     */
     public boolean checkStateAtCell(NoriCell cell, NoriCellState stateToCheck) {
         // Check if state to check is valid
         if (stateToCheck == NoriCellState.UNMARKED)
@@ -79,7 +97,11 @@ public class NoriGame {
         return stateToCheck != NoriCellState.WHITE || !willThisPlacementEncapsulateALonelyBlackCell(cell);
     }
 
-    // Returns true if there is a domino around the cell and thus the placement not valid
+    /**
+     * Checks if there is a domino (two BLACK cells together) around the passed cell
+     * @param cell Cell which should be checked for a near domino
+     * @return True if a domino is near the passed cell thus the placement is not valid
+     */
     private boolean isDominoAroundCell(NoriCell cell) {
         // Check top, then right, then bottom, then left
         return (cell.getRow() > 0 && isCellPartOfDomino(getCell(cell.getCol(), cell.getRow() - 1))) ||
@@ -88,7 +110,11 @@ public class NoriGame {
                 (cell.getCol() > 0 && isCellPartOfDomino(getCell(cell.getCol() - 1, cell.getRow())));
     }
 
-    // Return true if the passed cell is part of a domino
+    /**
+     * Checks if the passed cell is part of a domino (two BLACK cells together)
+     * @param cell Cell which should be checked
+     * @return True if the cell is part of a domino
+     */
     private boolean isCellPartOfDomino(NoriCell cell) {
         if (cell.getState() != NoriCellState.BLACK) return false;
 
@@ -99,6 +125,11 @@ public class NoriGame {
                 (cell.getCol() > 0 && getCell(cell.getCol() - 1, cell.getRow()).getState() == NoriCellState.BLACK);
     }
 
+    /**
+     * Checks if there is > 1 lonely (not part of a domino) BLACK cells around
+     * @param cell Cell which position should be checked
+     * @return True if there is > 1 lonely BLACK cells around
+     */
     public boolean isMoreThanOneLonelyBlackCellAround(NoriCell cell) {
         int count = 0;
 
@@ -125,6 +156,11 @@ public class NoriGame {
         return count > 1;
     }
 
+    /**
+     * Check if a WHITE placement at the passed cell encapsulates a lonely black cell around
+     * @param cell Cell where the WHITE placement should be checked
+     * @return True if a lonely BLACK cell will be encapsulated and thus the placement of a WHITE cell is not valid
+     */
     public boolean willThisPlacementEncapsulateALonelyBlackCell(NoriCell cell) {
         // Check top
         if (cell.getRow() > 0 && getCell(cell.getCol(), cell.getRow() - 1).getState() == NoriCellState.BLACK &&
@@ -146,6 +182,13 @@ public class NoriGame {
                 willThisPlacementEncapsulateTheGivenCell(cell.getCol() - 1, cell.getRow(), NoriDominoDirection.RIGHT);
     }
 
+    /**
+     * Checks if a not BLACK placement would encapsulate the cell positioned at the parameters
+     * @param col Column of the BLACK cell which should be checked for encapsulation
+     * @param row Row of the BLACK cell which should be checked for encapsulation
+     * @param whereWillTheWhiteCellBePlaced Where is the cell which is being checked for a WHITE placement (from the row and column sight)
+     * @return True if the BLACK cell (at col and row) will be encapsulated by the cell from the passed direction
+     */
     public boolean willThisPlacementEncapsulateTheGivenCell(int col, int row, NoriDominoDirection whereWillTheWhiteCellBePlaced) {
         // Check top
         if (row > 0 && getCell(col, row - 1).getState() != NoriCellState.WHITE &&
@@ -167,7 +210,10 @@ public class NoriGame {
                 whereWillTheWhiteCellBePlaced == NoriDominoDirection.LEFT;
     }
 
-    // Returns null if no Cell found
+    /**
+     * Finds the first UNMARKED cell in the cellList
+     * @return The first UNMARKED cell (null if no UNMARKED cell found)
+     */
     public NoriCell findUnmarkedCell() {
         for (NoriCell cell : getNoriCells()) {
             if (cell.getState() == NoriCellState.UNMARKED) return cell;
@@ -175,26 +221,52 @@ public class NoriGame {
         return null;
     }
 
+    /**
+     *
+     * @return The original list of NoriCells (no copy)
+     */
     public List<NoriCell> getNoriCells() {
         return noriCells;
     }
 
+    /**
+     *
+     * @return The original list of NoriRegions (no copy)
+     */
     public List<NoriRegion> getNoriRegions() {
         return noriRegions;
     }
 
+    /**
+     * Return the original cell at the passed place of the board
+     * @param col Column (X) of the cell which should be returned (zero based)
+     * @param row Row (Y) of the cell which should be returned (zero based)
+     * @return The original cell at the position (col and row)
+     */
     public NoriCell getCell(int col, int row) {
         return getNoriCells().get((maxCol + 1) * row + col);
     }
 
+    /**
+     *
+     * @return The max row number (with 6 rows, getMaxRow() returns 5)
+     */
     public int getMaxRow() {
         return maxRow;
     }
 
+    /**
+     *
+     * @return The max column number (with 6 columns, getMaxCol() returns 5)
+     */
     public int getMaxCol() {
         return maxCol;
     }
 
+    /**
+     *
+     * @return The max region identifier number
+     */
     public int getMaxRegion() {
         return getNoriRegions().size() - 1;
     }

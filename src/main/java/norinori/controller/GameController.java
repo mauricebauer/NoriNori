@@ -13,10 +13,18 @@ public class GameController {
     public boolean isSolverRunning = false;
     private NoriGame noriGame;
 
+    /**
+     * Constructor of the GameController class
+     * @param mainWindowController Reference to the main controller (for other references)
+     */
     public GameController(MainWindowController mainWindowController) {
         this.controller = mainWindowController;
     }
 
+    /**
+     * Reads and sets the NoriGame from a Json file stored at the passed path
+     * @param filePath Path to a valid json file containing a NoriGame
+     */
     public void readGameFromFile(String filePath) {
         try {
             Path path = Path.of(filePath);
@@ -43,6 +51,10 @@ public class GameController {
         controller.grid.getScene().getWindow().sizeToScene();
     }
 
+    /**
+     * Starts the solver in a separate thread
+     * @param stepping True if the solver should only solve one step
+     */
     public void startSolver(boolean stepping) {
         if (isSolverRunning) return;
         Runnable solve = () -> solver.solve(noriGame, new UiHelper(controller), stepping);
@@ -51,6 +63,9 @@ public class GameController {
         solverThread.start();
     }
 
+    /**
+     * Resets the NoriGame and all GUI elements for a fresh start
+     */
     public void resetGame() {
         if (isSolverRunning) return;
         noriGame.resetCells();

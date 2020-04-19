@@ -12,6 +12,11 @@ public class App extends Application {
         launch(args);
     }
 
+    /**
+     * Start method of the JavaFX application
+     * @param primaryStage The stage (window) of the NoriNori solver
+     * @throws Exception If resource cannot be found
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));

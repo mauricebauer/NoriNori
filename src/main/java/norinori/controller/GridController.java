@@ -14,6 +14,10 @@ public class GridController {
     private final GridPane grid;
     private double currentSizeOfCell;
 
+    /**
+     * Constructor for the GridController. It manages the grid element which is showing the NoriGame
+     * @param grid The GUI grid node where the NoriGame should be rendered
+     */
     public GridController(GridPane grid) {
         if (grid == null)
             throw new NullPointerException("Null grid not allowed!");
@@ -22,6 +26,10 @@ public class GridController {
         currentSizeOfCell = SIZE_OF_CELL;
     }
 
+    /**
+     * Increases or decreases the width and height of the cells (also directly in the GUI)
+     * @param shouldBeMadeBigger True if the cells should be made bigger. False if should be made smaller.
+     */
     public void resizeBoard(boolean shouldBeMadeBigger) {
         currentSizeOfCell = shouldBeMadeBigger ? currentSizeOfCell * 1.1 : currentSizeOfCell / 1.1;
 
@@ -31,6 +39,10 @@ public class GridController {
             column.setPrefWidth(currentSizeOfCell);
     }
 
+    /**
+     * Rerender all cell colors according to the states in the passed NoriGame.
+     * @param noriGame The game where the cell states should be retrieved from
+     */
     public void colorCells(NoriGame noriGame) {
         for (Node node : grid.getChildren()) {
             NoriCell cell = noriGame.getCell(GridPane.getColumnIndex(node), GridPane.getRowIndex(node));
@@ -48,6 +60,10 @@ public class GridController {
         }
     }
 
+    /**
+     * Instantiate the GUI board with the content of the passed NoriGame
+     * @param noriGame The game which should be rendered in the GUI grid node
+     */
     public void createBoard(NoriGame noriGame) {
         int rows = noriGame.getMaxRow() + 1;  // Because getMaxRow() is the index, the count is always + 1
         int columns = noriGame.getMaxCol() + 1;  // Because getMaxCol() is the index, the count is always + 1
@@ -102,6 +118,14 @@ public class GridController {
         colorCells(noriGame);
     }
 
+    /**
+     * Draws a border around the passed GUI cell node with the passed widths
+     * @param cell Cell which should get new borders
+     * @param top Width of the border at the top
+     * @param right Width of the border at the right
+     * @param bottom Width of the border at the bottom
+     * @param left Width of the border at the left
+     */
     private void drawBorder(Pane cell, double top, double right, double bottom, double left) {
         cell.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID,
