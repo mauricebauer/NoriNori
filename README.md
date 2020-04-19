@@ -2,6 +2,8 @@
 
 ---
 
+![build](https://github.com/mauricebauer/NoriNori/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+
 The **NoriNori Solver** is a **Java 11** application capable of solving NoriNori puzzles stored in **JSON** files through the help of backtracking. **JavaFX** is used to create the following GUI:
 
 ![GUI](images/gui.png "GUI")
