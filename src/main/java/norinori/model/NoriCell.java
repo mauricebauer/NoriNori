@@ -1,5 +1,7 @@
 package norinori.model;
 
+import java.security.InvalidParameterException;
+
 public class NoriCell {
     private final int col;
     private final int row;
@@ -7,6 +9,9 @@ public class NoriCell {
     private NoriCellState state;
 
     public NoriCell(int col, int row, int region) {
+        if (col < 0 || row < 0 || region < 0)
+            throw new InvalidParameterException("Parameters must be positive");
+
         this.col = col;
         this.row = row;
         this.region = region;
@@ -33,11 +38,8 @@ public class NoriCell {
     }
 
     public NoriCellState getState() {
-        // state is null if deserialized via gson from json
-        if (state == null)
-            return NoriCellState.UNMARKED;
-
-        return state;
+        // state can be null if cell is created by Gson from JSON
+        return state != null ? state : NoriCellState.UNMARKED;
     }
 
     public void setState(NoriCellState state) {
