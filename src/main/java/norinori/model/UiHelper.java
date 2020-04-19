@@ -3,26 +3,23 @@ package norinori.model;
 import javafx.application.Platform;
 import norinori.controller.MainWindowController;
 
-public class UiHelper implements IUiHelper {
+public class UiHelper {
     private final MainWindowController controller;
 
     public UiHelper(MainWindowController controller) {
         this.controller = controller;
     }
 
-    @Override
-    public void updateCellColor(INoriGame noriGame) {
+    public void updateCellColor(NoriGame noriGame) {
         Platform.runLater(() -> controller.gridController.colorCells(noriGame));
     }
 
-    @Override
     public void startedSolving() {
         Platform.runLater(() -> controller.sidebarController.setButtons(true, true, true));
         Platform.runLater(() -> controller.setButtons(false, false, true, true));
     }
 
-    @Override
-    public void finishedSolving(INoriGame noriGame, boolean stepping) {
+    public void finishedSolving(NoriGame noriGame, boolean stepping) {
         if (!stepping && !noriGame.isSolved())
             Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
 

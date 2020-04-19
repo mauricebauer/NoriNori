@@ -1,6 +1,5 @@
 package norinori.controller;
 
-import norinori.model.INoriGame;
 import norinori.model.NoriGame;
 import norinori.model.Solver;
 import norinori.model.UiHelper;
@@ -12,7 +11,7 @@ public class GameController {
     private final MainWindowController controller;
     private final Solver solver = new Solver();
     public boolean isSolverRunning = false;
-    private INoriGame noriGame;
+    private NoriGame noriGame;
 
     public GameController(MainWindowController mainWindowController) {
         this.controller = mainWindowController;

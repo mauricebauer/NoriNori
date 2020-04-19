@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-public class NoriGame implements INoriGame {
+public class NoriGame {
     // Indexes are always ((maxCol+1) * row) + col
     private final List<NoriCell> noriCells = new ArrayList<>();
     private final List<NoriRegion> noriRegions = new ArrayList<>();
@@ -195,7 +195,6 @@ public class NoriGame implements INoriGame {
         return maxCol;
     }
 
-    @Override
     public int getMaxRegion() {
         return getNoriRegions().size() - 1;
     }

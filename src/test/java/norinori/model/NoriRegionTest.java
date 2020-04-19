@@ -28,9 +28,15 @@ class NoriRegionTest {
     void getNumberOfCells_TwoBlackOneWhiteZeroUnmarked_CorrectNumberReturned() {
         // Setup
         NoriRegion region = new NoriRegion();
-        region.addCell(new NoriCell(0, 0, 0) {{setState(NoriCellState.BLACK);}});
-        region.addCell(new NoriCell(1, 0, 0) {{setState(NoriCellState.BLACK);}});
-        region.addCell(new NoriCell(2, 0, 0) {{setState(NoriCellState.WHITE);}});
+        region.addCell(new NoriCell(0, 0, 0) {{
+            setState(NoriCellState.BLACK);
+        }});
+        region.addCell(new NoriCell(1, 0, 0) {{
+            setState(NoriCellState.BLACK);
+        }});
+        region.addCell(new NoriCell(2, 0, 0) {{
+            setState(NoriCellState.WHITE);
+        }});
 
         // Run & Assert
         assertEquals(0, region.getNumberOfCells(NoriCellState.UNMARKED));

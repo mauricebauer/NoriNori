@@ -11,7 +11,7 @@ public class Solver {
     // (to store the move - do not replace the original cell with the clone -> only the values)
     private final Deque<NoriCell> stack = new ArrayDeque<>();
 
-    public void solve(INoriGame noriGame, IUiHelper uiHelper, boolean stepping) {
+    public void solve(NoriGame noriGame, UiHelper uiHelper, boolean stepping) {
         if (noriGame.isSolved()) {
             uiHelper.finishedSolving(noriGame, stepping);
             return;
@@ -45,7 +45,7 @@ public class Solver {
         }
     }
 
-    private void solveStep(INoriGame noriGame, NoriCell cellToSolve) {
+    private void solveStep(NoriGame noriGame, NoriCell cellToSolve) {
         if (cellToSolve.getState() == NoriCellState.UNMARKED &&
                 noriGame.checkStateAtCell(cellToSolve, NoriCellState.BLACK)) {
             cellToSolve.setState(NoriCellState.BLACK);
@@ -71,7 +71,7 @@ public class Solver {
         stack.clear();
     }
 
-    private NoriCell getNextCell(INoriGame noriGame) {
+    private NoriCell getNextCell(NoriGame noriGame) {
         if (stack.isEmpty()) return noriGame.getCell(0, 0);
 
         NoriCell cellOnStack = stack.peek();
