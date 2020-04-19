@@ -62,7 +62,7 @@ public class NoriGame implements INoriGame {
 
         // Check region
         NoriRegion regionOfCell = getNoriRegions().get(cell.getRegion());
-        if (!regionOfCell.checkIfPlacementInRegionIsValid(stateToCheck))
+        if (!regionOfCell.checkIfPlacementIsValid(stateToCheck))
             return false;
 
         // Check black placement
