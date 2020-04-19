@@ -222,12 +222,12 @@ public class MainWindowController implements Initializable {
     }
 
     /**
-     * Handler for the developer hyperlink (opens the GitHub profile of the maintainer)
+     * Handler for the project hyperlink (opens the GitHub page of the project)
      */
     @FXML
     private void developerClicked() {
         try {
-            Desktop.getDesktop().browse(new URL("https://github.com/mauricebauer").toURI());
+            Desktop.getDesktop().browse(new URL("https://github.com/mauricebauer/NoriNori").toURI());
         } catch (Exception e) {
             e.printStackTrace();
         }
