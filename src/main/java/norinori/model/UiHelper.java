@@ -17,20 +17,23 @@ public class UiHelper implements IUiHelper {
 
     @Override
     public void startedSolving() {
-        Platform.runLater(() -> controller.setDisableButtons(true));
+        Platform.runLater(() -> controller.sidebarController.setButtons(true, true, true));
+        Platform.runLater(() -> controller.setButtons(false, false, true, true));
     }
 
     @Override
     public void finishedSolving(INoriGame noriGame, boolean stepping) {
-        finishedSolving(noriGame, stepping, false);
-    }
-
-    @Override
-    public void finishedSolving(INoriGame noriGame, boolean stepping, boolean steppingResult) {
         if (!stepping && !noriGame.isSolved())
             Platform.runLater(() -> controller.alertController.showNotSolvableAlert());
 
+        Platform.runLater(() -> controller.setButtons(false, false, false, false));
+
+        if (noriGame.isSolved())
+            Platform.runLater(() -> controller.sidebarController.setButtons(true, true, false));
+        else
+            Platform.runLater(() -> controller.sidebarController.setButtons(false, false, false));
+
         Platform.runLater(() -> controller.gridController.colorCells(noriGame));
-        Platform.runLater(() -> controller.setDisableButtons(false));
+        Platform.runLater(() -> controller.gameController.isSolverRunning = false);
     }
 }

@@ -15,21 +15,6 @@ public class NoriGame implements INoriGame {
     private final List<NoriRegion> noriRegions = new ArrayList<>();
     private final int maxRow, maxCol;
 
-    public NoriGame() {
-        int rows = 6;
-        int columns = 6;
-        maxRow = rows - 1;
-        maxCol = columns - 1;
-        noriRegions.add(new NoriRegion());
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                NoriCell cell = new NoriCell(col, row, 0);
-                getNoriCells().add(cell);  // Be careful with the position of the object in the list!
-                getNoriRegions().get(0).addCell(cell);
-            }
-        }
-    }
-
     public NoriGame(String jsonString) {
         // Parse JSON
         Type jsonType = new TypeToken<ArrayList<ArrayList<Integer>>>() {

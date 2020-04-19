@@ -6,6 +6,4 @@ public interface IUiHelper {
     void startedSolving();
 
     void finishedSolving(INoriGame noriGame, boolean stepping);
-
-    void finishedSolving(INoriGame noriGame, boolean stepping, boolean steppingResult);
 }

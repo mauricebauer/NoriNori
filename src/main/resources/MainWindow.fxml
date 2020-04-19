@@ -6,7 +6,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="400" minWidth="640" onKeyPressed="#keyPressed" styleClass="main"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" minHeight="400" minWidth="640" onKeyPressed="#keyPressed"
+            styleClass="main"
             stylesheets="@Style.css" xmlns="http://javafx.com/javafx/11.0.1"
             fx:controller="norinori.controller.MainWindowController">
     <center>
@@ -109,9 +110,7 @@
                     </font>
                     <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@folder.png"/>
-                            </image>
+                            <Image url="@folder.png"/>
                         </ImageView>
                     </graphic>
                     <padding>

@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
       minWidth="-Infinity"
       prefHeight="300.0" prefWidth="400.0" styleClass="main" stylesheets="@Style.css"
       xmlns="http://javafx.com/javafx/11.0.1">
@@ -14,24 +14,20 @@
         <padding>
             <Insets bottom="20.0" left="20.0"/>
         </padding>
-        <children>
-            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                <HBox.margin>
-                    <Insets top="20.0"/>
-                </HBox.margin>
-                <image>
-                    <Image url="@logo.png"/>
-                </image>
-            </ImageView>
-            <Label prefHeight="40.0" text="NoriNori Solver&#10;Attributions">
-                <HBox.margin>
-                    <Insets left="10.0" top="20.0"/>
-                </HBox.margin>
-                <padding>
-                    <Insets top="-3.0"/>
-                </padding>
-            </Label>
-        </children>
+        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+            <HBox.margin>
+                <Insets top="20.0"/>
+            </HBox.margin>
+            <Image url="@logo.png"/>
+        </ImageView>
+        <Label prefHeight="40.0" text="NoriNori Solver&#10;Attributions">
+            <HBox.margin>
+                <Insets left="10.0" top="20.0"/>
+            </HBox.margin>
+            <padding>
+                <Insets top="-3.0"/>
+            </padding>
+        </Label>
     </HBox>
     <Label style="-fx-font-size: 10pt;"
            text="This application is developed and maintained&#10;by Maurice Bauer. Feel free to contribute.&#10;&#10;F1 - Attributions&#10;F2 - Open JSON file&#10;F5 - Step&#10;F6 - Solve&#10;F7 - Clear&#10;F8 - Close Application&#10;&#10;Icons made by Kiranshastry from www.flaticon.com">

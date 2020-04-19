@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NoriRegion {
-    // A list is sufficient because this will always get fully iterated
+    // A list is efficient enough because this will always get fully iterated
     private final List<NoriCell> cellList = new ArrayList<>();
 
     public void addCell(NoriCell cell) {
@@ -26,7 +26,7 @@ public class NoriRegion {
 
     private int getNumberOfCells(NoriCellState stateToCount) {
         int count = 0;
-        // Forloop is faster than a stream and this here is quite easy
+        // for-loop is faster than a stream and this here is quite easy
         for (NoriCell cell : cellList) {
             if (cell.getState() == stateToCount) count++;
         }
